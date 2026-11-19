@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#070b13">
-  <meta name="description" content="Türkbox, oyun altyazılarını telefonda algılayıp Türkçeye çevirerek TV ekranında gösterir.">
+  <meta name="description" content="Türkbox; Android'deki PS4 veya Xbox Remote Play altyazılarını algılayan, Türkçeye çeviren ve Tizen/webOS TV alıcısına gönderen bağımsız bir yardımcı uygulamadır.">
+  <link rel="icon" type="image/jpeg" href="assets/turkbox-logo.jpg">
   <title>Türkbox — Oyun, kendi dilinde</title>
   <style>
     :root {
@@ -48,6 +49,7 @@
 
     a { color: inherit; text-decoration: none; }
     button { font: inherit; }
+    code { padding: 2px 6px; border: 1px solid var(--line); border-radius: 6px; color: #bdeedd; background: rgba(0,0,0,.2); font-size: .92em; }
     .wrap { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
     .glass {
       border: 1px solid var(--line);
@@ -91,15 +93,15 @@
       display: grid;
       width: 36px;
       height: 36px;
+      overflow: hidden;
       place-items: center;
       border: 1px solid rgba(126, 246, 207, .35);
       border-radius: 12px;
       color: var(--mint);
       background: linear-gradient(145deg, rgba(126, 246, 207, .23), rgba(144, 184, 255, .1));
       box-shadow: 0 0 24px rgba(126, 246, 207, .12);
-      font-size: 19px;
-      font-weight: 850;
     }
+    .brand-mark img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .nav-links { display: flex; align-items: center; gap: 30px; color: #c4ccda; font-size: 13px; }
     .nav-links a { transition: color .2s ease; }
     .nav-links a:hover { color: white; }
@@ -296,7 +298,7 @@
 
     .flow {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 0;
       padding: 30px;
       border-radius: 30px;
@@ -335,6 +337,33 @@
     .setup-item h3 { margin: 2px 0 5px; font-size: 14px; }
     .setup-item p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
 
+    .app-sections { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+    .app-section { min-height: 255px; padding: 21px; border-radius: 22px; }
+    .app-section-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .app-section-index { color: rgba(255,255,255,.3); font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+    .app-section-icon { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(126,246,207,.2); border-radius: 14px; color: var(--mint); background: rgba(126,246,207,.075); }
+    .app-section h3 { margin: 19px 0 8px; font-size: 15px; letter-spacing: -.025em; }
+    .app-section p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .app-section .tag { display: inline-block; margin-top: 14px; font-size: 9px; }
+    .platform-grid, .privacy-grid, .limit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .platform-card, .privacy-card, .limit-card { padding: 25px; border-radius: 24px; }
+    .platform-card h3, .privacy-card h3, .limit-card h3 { margin: 14px 0 8px; font-size: 16px; }
+    .platform-card p, .privacy-card p, .limit-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .platform-card .section-kicker, .privacy-card .section-kicker, .limit-card .section-kicker { font-size: 9px; }
+    .data-flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 22px; }
+    .data-flow div { padding: 13px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255,255,255,.025); }
+    .data-flow b { display: block; margin-bottom: 5px; color: #e4eaf5; font-size: 11px; }
+    .data-flow span { display: block; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .notice { margin-top: 20px; padding: 16px 18px; border: 1px solid rgba(255,205,120,.2); border-radius: 17px; color: #e5d7b8; background: rgba(255,205,120,.045); font-size: 12px; line-height: 1.75; }
+    .faq-list { display: grid; gap: 9px; }
+    .faq-item { padding: 0 18px; border-radius: 17px; }
+    .faq-item summary { position: relative; padding: 18px 34px 18px 0; color: #e6ebf5; font-size: 13px; font-weight: 700; cursor: pointer; list-style: none; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { position: absolute; top: 50%; right: 2px; color: var(--mint); content: "+"; font-size: 20px; font-weight: 400; transform: translateY(-50%); }
+    .faq-item[open] summary::after { content: "−"; }
+    .faq-item p { margin: -2px 0 18px; padding-right: 28px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .repo-note { max-width: 610px; margin: 12px auto 0; color: #8d99ad; font-size: 11px; line-height: 1.7; }
+
     .final-cta { position: relative; padding: 86px 28px; overflow: hidden; border-radius: 34px; text-align: center; }
     .final-cta::before { position: absolute; top: -200px; left: 50%; width: 520px; aspect-ratio: 1; border: 1px solid rgba(126,246,207,.13); border-radius: 50%; box-shadow: 0 0 0 45px rgba(255,255,255,.015), 0 0 0 95px rgba(255,255,255,.012); transform: translateX(-50%); content: ""; }
     .final-cta > * { position: relative; }
@@ -365,6 +394,11 @@
       .hero-art { width: min(100%, 650px); margin: 0 auto; }
       .setup-grid { grid-template-columns: 1fr; gap: 22px; }
       .setup-copy { position: static; }
+      .flow { grid-template-columns: repeat(2, 1fr); }
+      .flow-step + .flow-step::before { top: 18px; right: 0; left: auto; width: 1px; height: calc(100% - 36px); }
+      .flow-step:nth-child(odd)::before { display: none; }
+      .flow-step:nth-child(n+3)::after { position: absolute; top: 0; right: 12px; left: 12px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent); content: ""; }
+      .app-sections { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 700px) {
       .wrap { width: min(100% - 32px, 560px); }
@@ -386,10 +420,14 @@
       .float-card { padding: 10px 11px; }
       section.content-section { padding: 82px 0; }
       .feature-grid { grid-template-columns: 1fr; }
+      .app-sections, .platform-grid, .privacy-grid, .limit-grid { grid-template-columns: 1fr; }
+      .data-flow { grid-template-columns: 1fr; }
       .feature { min-height: 215px; }
       .flow { grid-template-columns: 1fr; padding: 17px; }
       .flow-step { padding: 18px 12px; }
       .flow-step + .flow-step::before { top: 0; right: 12px; left: 12px; width: auto; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent); }
+      .flow-step:nth-child(odd)::before { display: block; }
+      .flow-step:nth-child(n+3)::after { display: none; }
       .flow-step h3 { margin-top: 15px; }
       .speaker-panel { grid-template-columns: 1fr; gap: 5px; }
       .voice-stack { min-height: 250px; }
@@ -408,16 +446,16 @@
   <header class="header">
     <div class="wrap nav-shell">
       <a class="brand" href="#baslangic" aria-label="Türkbox ana sayfa">
-        <span class="brand-mark" aria-hidden="true">T</span>
+        <span class="brand-mark" aria-hidden="true"><img src="assets/turkbox-logo.jpg" alt=""></span>
         <span>Türkbox</span>
       </a>
       <nav class="nav-links" id="site-nav" aria-label="Ana menü">
         <a href="#ozellikler">Özellikler</a>
-        <a href="#akis">Nasıl çalışır?</a>
-        <a href="#ses-profili">Ses profilleri</a>
+        <a href="#bolumler">Uygulama bölümleri</a>
         <a href="#kurulum">Kurulum</a>
+        <a href="#sss">SSS</a>
       </nav>
-      <a class="nav-cta" href="#kurulum">Türkbox'ı keşfet <span aria-hidden="true">↗</span></a>
+      <a class="nav-cta" href="https://github.com/posmakinesi/turkbox" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       <button class="menu-toggle" type="button" aria-label="Menüyü aç" aria-expanded="false" aria-controls="site-nav">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
       </button>
@@ -428,16 +466,16 @@
     <section class="hero" id="baslangic">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <div class="eyebrow reveal"><span class="pulse"></span> XBOX + PLAYSTATION · TV'DE TÜRKÇE</div>
+          <div class="eyebrow reveal"><span class="pulse"></span> ANDROID · TIZEN · WEBOS</div>
           <h1 class="reveal delay-1">Oyun, <span class="gradient-text">kendi dilinde.</span></h1>
-          <p class="reveal delay-2">Türkbox, Remote Play ekranındaki İngilizce altyazıları algılar, Türkçeye çevirir ve oyun görüntüsünün üzerine taşır.</p>
+          <p class="reveal delay-2">Türkbox, Android telefonundaki PS4 veya Xbox Remote Play ekranında seçtiğin İngilizce altyazı alanını okur, Türkçeye çevirir ve aynı yerel ağdaki Tizen TV alıcısına ya da webOS tarayıcısına gönderir.</p>
           <div class="actions reveal delay-3">
             <a class="button button-primary" href="#akis">Nasıl çalıştığını gör <span class="arrow" aria-hidden="true">→</span></a>
             <a class="button button-quiet" href="#ozellikler">Özellikleri keşfet</a>
           </div>
           <div class="hero-footnote reveal delay-3">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 19 6v5c0 4.8-3.1 8.6-7 10-3.9-1.4-7-5.2-7-10V6l7-3Z" stroke="currentColor" stroke-width="1.6"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Çeviri telefonda işlenir · TV aynı ağ üzerinden alıcı olur
+            Konsol HDMI'sı yakalanmaz · TV telefonun gönderdiği metni gösterir
           </div>
         </div>
 
@@ -448,7 +486,7 @@
               <div class="screen-scene" aria-hidden="true">
                 <span class="scene-window"></span><span class="scene-lamp"></span>
               </div>
-              <div class="screen-top"><span>REMOTE PLAY · LIVE</span><span>HDMI 1</span></div>
+              <div class="screen-top"><span>REMOTE PLAY · TELEFON</span><span>TV ALICISI</span></div>
               <div class="screen-title">THE LAST SIGNAL</div>
               <div class="subtitles">
                 <small>Türkbox · anlık çeviri</small>
@@ -482,7 +520,7 @@
         <div class="section-heading reveal">
           <div class="section-kicker">Daha anlaşılır bir oyun akışı</div>
           <h2>Arka planda teknoloji.<br><span class="gradient-text">Ekranda sadece anlam.</span></h2>
-          <p>Telefon görüntüyü okur ve çevirir; televizyon ise dikkati dağıtmayan bir altyazı katmanı sunar.</p>
+          <p>Görüntü kaynağı telefonundaki Remote Play uygulamasıdır. Türkbox HDMI sinyaline veya oyun dosyalarına erişmez.</p>
         </div>
         <div class="feature-grid">
           <article class="feature glass reveal">
@@ -491,7 +529,7 @@
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 8V5a1 1 0 0 1 1-1h3m8 0h3a1 1 0 0 1 1 1v3m0 8v3a1 1 0 0 1-1 1h-3m-8 0H5a1 1 0 0 1-1-1v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M7 10h10M7 14h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
             </div>
             <h3>Altyazıyı otomatik yakala</h3>
-            <p>Telefon ekranındaki seçili bölgeyi tara. Kararlı metni algılayıp çeviri için hazırla.</p>
+            <p>MediaProjection ile ekran yakalama izni al. Taşınıp boyutlandırılabilen altyazı bölgesindeki kararlı metni OCR ile tanı.</p>
           </article>
           <article class="feature glass reveal delay-1">
             <span class="feature-number">02 / TR</span>
@@ -499,7 +537,7 @@
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 5h10M9 3v2c0 5-2.5 8-5 10m2-7c1 3 3.5 5.5 7 7M14 20l4-11 4 11m-6.5-3h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h3>Türkçeye çevir</h3>
-            <p>Çevrimdışı çeviriyle devam et veya istersen DeepL ayarını kullan. Kontrol sende kalsın.</p>
+            <p>Varsayılan ML Kit çevirisi cihazda çalışır. İstersen altyazı metnini DeepL'e gönderen API seçeneğini ayarla.</p>
           </article>
           <article class="feature glass reveal delay-2">
             <span class="feature-number">03 / TV</span>
@@ -507,7 +545,7 @@
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 22h8m-4-4v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
             </div>
             <h3>TV'de görüntüle</h3>
-            <p>Android telefon ile Tizen TV'yi aynı ağa bağla; çeviriyi oyun görüntüsünün üzerinde gör.</p>
+            <p>Tizen alıcısı ya da webOS tarayıcısı metni yerel ağdan alır. HDMI katmanının davranışı TV desteğine bağlıdır.</p>
           </article>
         </div>
       </div>
@@ -518,23 +556,27 @@
         <div class="section-heading reveal">
           <div class="section-kicker">Üç adımda</div>
           <h2>Telefon algılar.<br>TV'de <span class="gradient-text">oyun devam eder.</span></h2>
-          <p>Türkbox, konsol dosyalarına müdahale etmeden Remote Play görüntüsünü kullanır.</p>
+          <p>Telefon ve TV aynı yerel ağda olmalı. QR/kod tabanlı bir eşleştirme yerine uygulamada gösterilen telefon IP'si ve 6 haneli kod kullanılır.</p>
         </div>
         <div class="flow glass reveal">
           <article class="flow-step">
             <div class="step-top"><span class="step-index">01</span><span class="step-line"></span><span class="tag">Android</span></div>
-            <h3>Telefonu bağla</h3>
-            <p>Remote Play ekran yakalama iznini ver ve altyazının göründüğü alanı seç.</p>
+            <h3>İzinleri ver</h3>
+            <p>Ekran yakalama ve kayan altyazı alanı için istenen Android izinlerini onayla.</p>
           </article>
           <article class="flow-step">
             <div class="step-top"><span class="step-index">02</span><span class="step-line"></span><span class="tag">Türkbox</span></div>
-            <h3>Metni çevir</h3>
-            <p>Türkbox kararlı altyazıyı OCR ile algılar ve Türkçe karşılığını hazırlar.</p>
+            <h3>Alanı seç ve yakala</h3>
+            <p>Remote Play'i telefonda ayrıca aç. Altyazı bölgesini seçip kilitle; OCR yalnız bu alanda çalışır.</p>
           </article>
           <article class="flow-step">
-            <div class="step-top"><span class="step-index">03</span><span class="step-line"></span><span class="tag">Tizen TV</span></div>
-            <h3>Oyuna geri dön</h3>
-            <p>Telefon ile TV'yi eşleştir; altyazılar TV alıcısında görüntülensin.</p>
+            <h3>Çeviriyi seç</h3>
+            <p>ML Kit çevrimdışı modeli varsayılandır; DeepL isteğe bağlıdır. OCR metni sağlayıcı ayarına göre yerel veya bulut üzerinden işlenir.</p>
+          </article>
+          <article class="flow-step">
+            <div class="step-top"><span class="step-index">04</span><span class="step-line"></span><span class="tag">TV alıcısı</span></div>
+            <h3>TV'yi eşleştir</h3>
+            <p>Telefon IP'si ve 6 haneli kodla Tizen uygulamasına veya yerel webOS sitesine bağlan.</p>
           </article>
         </div>
       </div>
@@ -546,11 +588,11 @@
           <div class="speaker-copy">
             <div class="section-kicker">Oyun diyalog kataloğu</div>
             <h2>Bir sesi seç.<br><span class="gradient-text">Benzer repliklere uygula.</span></h2>
-            <p>Oyun profiline diyalogları kaydet. Türkbox, izin verildiğinde ses örneklerini telefonda analiz ederek benzer konuşmaları gruplar. Bir repliğe seçtiğin sesi, aynı gruptaki diğer repliklere de atayabilirsin.</p>
+            <p>Oyun profiline altyazı diyaloglarını kaydet. İzin verilirse telefon, Remote Play'in dahili oyun sesinden kısa örnekleri geçici olarak analiz edip benzer sesleri yaklaşık gruplar. Ham ses saklanmaz; bir repliğe seçtiğin ElevenLabs sesini aynı gruptaki diğer satırlara atayabilirsin.</p>
             <div class="tag-row">
-              <span class="tag">Ses benzerliği · deneysel</span>
-              <span class="tag">Ham ses kaydedilmez</span>
-              <span class="tag">Ses seçimi telefonda</span>
+              <span class="tag">Karakter adı/cinsiyeti tanımaz</span>
+              <span class="tag">Toplu üretim ElevenLabs ister</span>
+              <span class="tag">Tam OCR eşleşmesi gerekir</span>
             </div>
           </div>
           <div class="voice-stack" aria-hidden="true">
@@ -566,31 +608,245 @@
       </div>
     </section>
 
+    <section class="content-section" id="bolumler">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <div class="section-kicker">Türkbox uygulaması</div>
+          <h2>Her bölüm, <span class="gradient-text">ne işe yaradığını açıkça anlatır.</span></h2>
+          <p>Uygulama menüsündeki işlevler, gerekli izinler ve önemli kısıtlamalar aşağıda.</p>
+        </div>
+        <div class="app-sections">
+          <article class="app-section glass reveal">
+            <div class="app-section-top"><span class="app-section-index">01 / CANLI</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 8V5a1 1 0 0 1 1-1h3m8 0h3a1 1 0 0 1 1 1v3m0 8v3a1 1 0 0 1-1 1h-3m-8 0H5a1 1 0 0 1-1-1v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M7 10h10M7 14h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div>
+            <h3>Anlık çeviri</h3>
+            <p>MediaProjection ile telefondaki Remote Play ekranını yakalar. Kullanıcı altyazı alanını taşır/boyutlandırır; OCR yalnız bu alanda çalışır ve aynı metnin kararlı olmasını bekler. Ekran yakalama ve diğer uygulamaların üzerinde gösterme izinleri gerekir. Remote Play'i ayrıca açmalısın.</p>
+            <span class="tag">PS4 / Xbox Remote Play</span>
+          </article>
+          <article class="app-section glass reveal delay-1">
+            <div class="app-section-top"><span class="app-section-index">02 / TIZEN</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 22h8m-4-4v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div>
+            <h3>Tizen uygulaması yükleme</h3>
+            <p>İmzalı WGT paketini Android uygulamasından kurar. TV'de Developer Mode'u açıp Host PC IP'ye telefonun Wi-Fi IP'sini yaz; iki cihazı aynı ağa bağla. SDB yüklemesi 26101 portunu kullanır. Hedef Tizen 5.0 / 2019 RU7400'dür.</p>
+            <span class="tag">TV uygulaması açık kalmalı</span>
+          </article>
+          <article class="app-section glass reveal delay-2">
+            <div class="app-section-top"><span class="app-section-index">03 / WEBOS</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 8h18M7 6h.01M10 6h.01M8 22h8m-4-3v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div>
+            <h3>webOS TV'de çalıştırma</h3>
+            <p>webOS alıcısı, TV tarayıcısında açılan ve telefondan sunulan yerel sayfadır: <code>http://telefon-ip:8766/</code>. TV'de HDMI kaynağını seç, sonra telefondaki IP ve 6 haneli eşleştirme kodunu gir. GitHub Pages HTTPS adresi bu yerel alıcının yerine geçmez.</p>
+            <span class="tag">Aynı yerel ağ gerekir</span>
+          </article>
+          <article class="app-section glass reveal">
+            <div class="app-section-top"><span class="app-section-index">04 / API</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="4" stroke="currentColor" stroke-width="1.7"/><path d="m11 11 9 9m-4-4 3-3m-6 0 3-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div>
+            <h3>API anahtarları</h3>
+            <p>Çevrimdışı ML Kit çevirisi varsayılandır; ilk model indirmesi internet isteyebilir. DeepL metni buluta gönderir. ElevenLabs'in hazır seslerinden biri seçilebilir; ayar yoksa canlı/test seslerinde Android TTS kullanılabilir. Ses değiştirirken anahtar alanını boş bırakmak kayıtlı anahtarı korur. Anahtarlar Android Keystore ile korunur.</p>
+            <span class="tag">Bulut sağlayıcıları isteğe bağlı</span>
+          </article>
+          <article class="app-section glass reveal delay-1">
+            <div class="app-section-top"><span class="app-section-index">05 / TEST</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/></svg></span></div>
+            <h3>Test merkezi</h3>
+            <p>Altyazı gönderimini ve TV'den ses çalmayı ayrı ayrı dene. Ekran yakalama oturumu ve TV eşleşmesi açık olmalıdır. Otomatik canlı dublaj kapalı başlar; açıldığında yeni çevirileri seçili varsayılan sesle okur. Oyun kataloğunun önceden dublajlama işlevinden ayrıdır.</p>
+            <span class="tag">Otomatik dublaj varsayılan kapalı</span>
+          </article>
+          <article class="app-section glass reveal delay-2">
+            <div class="app-section-top"><span class="app-section-index">06 / OYUN SESİ</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v18m-5-13v8m10-11v14M3 9v6m18-8v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div>
+            <h3>Türkçe Dublaj</h3>
+            <p>Oyun profiline OCR diyaloglarını kaydet; konuşmacı benzerliği yaklaşık gruplar ve ses seçimini benzer repliklere uygular. Karakter adı/cinsiyeti tanımaz. Toplu MP3 üretimi ElevenLabs anahtarı ve buluta metin gönderimi gerektirir. Dublajlı oynatma için kayıtlı satırın OCR metni tam eşleşmelidir.</p>
+            <span class="tag">Dahili ses yakalama izni kayıt modunda</span>
+          </article>
+          <article class="app-section glass reveal">
+            <div class="app-section-top"><span class="app-section-index">07 / YAMA</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5M9 13h7M9 17h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+            <h3>Yama çevirisi</h3>
+            <p>The Evil Within temel oyunu için YouTube otomatik dökümü ve Türkçe yama anahtar sırasından oluşturulmuş deneysel eşleştirmedir; özgün İngilizce oyun localization'ı değildir, yanlış satır gösterebilir ve DLC içermez. Eşleşme yoksa DeepL, yoksa çevrimdışı çeviri denenir.</p>
+            <span class="tag">Deneysel · gerçek Xbox OCR doğrulanmadı</span>
+          </article>
+          <article class="app-section glass reveal delay-1">
+            <div class="app-section-top"><span class="app-section-index">08 / TV GÖRÜNÜMÜ</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="9" cy="7" r="2" fill="#070b13" stroke="currentColor" stroke-width="1.7"/><circle cx="15" cy="12" r="2" fill="#070b13" stroke="currentColor" stroke-width="1.7"/><circle cx="7" cy="17" r="2" fill="#070b13" stroke="currentColor" stroke-width="1.7"/></svg></span></div>
+            <h3>Altyazı ayarları</h3>
+            <p>TV yazı boyutunu, yazı ve arka plan renklerini, arka plan opaklığını ve boyutunu değiştir. Ayarlar telefonda saklanır ve aktif oturumda alıcıya gönderilir. Tizen kumandasının sol/sağ tuşları yazı boyutunu da kontrol edebilir.</p>
+            <span class="tag">TV alıcısı bağlı olmalı</span>
+          </article>
+          <article class="app-section glass reveal delay-2">
+            <div class="app-section-top"><span class="app-section-index">09 / TEMA</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 1 0 0 18h1.2a2 2 0 0 0 1.4-3.4 1.8 1.8 0 0 1 1.3-3.1H18a3 3 0 0 0 3-3c0-4.7-4-8.5-9-8.5Z" stroke="currentColor" stroke-width="1.6"/><circle cx="7.5" cy="11" r="1" fill="currentColor"/><circle cx="10" cy="7.5" r="1" fill="currentColor"/><circle cx="15" cy="8" r="1" fill="currentColor"/></svg></span></div>
+            <h3>Tema</h3>
+            <p>Android uygulamasında açık veya koyu görünüm seç; Xbox yeşili, okyanus mavisi, menekşe veya kızıl vurgu kullan. Bu ayar telefon arayüzünü değiştirir. TV altyazı görünümü ayrı bölümden ayarlanır.</p>
+            <span class="tag">Telefon arayüzü</span>
+          </article>
+          <article class="app-section glass reveal">
+            <div class="app-section-top"><span class="app-section-index">10 / BİLGİ</span><span class="app-section-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5m0-8h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></div>
+            <h3>Uygulama hakkında</h3>
+            <p>Android/Tizen gereksinimleri, kullanılan izinler, ağ portları ve geliştirme durumunu gösterir. WebSocket altyazı aktarımı 8765; Tizen SDB kurulumu 26101; webOS yerel sitesi 8766 portunu kullanır. Portlar farklı amaçlara hizmet eder.</p>
+            <span class="tag">Teknik bilgi ve sınırlar</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="content-section" id="kurulum">
       <div class="wrap setup-grid">
         <div class="setup-copy reveal">
           <div class="section-kicker">Kurulum</div>
           <h2>Oyun ekranın.<br><span class="gradient-text">Türkçe anlatımın.</span></h2>
-          <p>Türkbox Android uygulaması ile TV alıcısını aynı yerel ağa bağla. TV paketi geliştirici modu üzerinden yüklenir.</p>
+          <p>İşlem, Remote Play görüntüsünü telefonda yakalamaya ve aynı yerel ağdaki TV alıcısına bağlanmaya dayanır. HDMI videosu telefon üzerinden TV'ye aktarılmaz.</p>
           <a class="button button-quiet" href="#baslangic">Başa dön <span class="arrow" aria-hidden="true">↑</span></a>
         </div>
         <div class="setup-list">
           <article class="setup-item glass reveal">
             <span class="setup-num">01</span>
-            <div><h3>Android uygulamasını hazırla</h3><p>Telefonuna Türkbox'ı yükle ve ekran yakalama iznini ver.</p></div>
+          <div><h3>Android uygulamasını yükle</h3><p>APK'yı Android telefonuna kur. Android 8 (API 26) ve üzeri hedeflenir.</p></div>
           </article>
           <article class="setup-item glass reveal delay-1">
             <span class="setup-num">02</span>
-            <div><h3>Tizen TV alıcısını yükle</h3><p>TV'de Developer Mode'u aç; telefonla TV aynı Wi-Fi ağına bağlı olsun.</p></div>
+          <div><h3>TV'yi ve telefonu aynı ağa bağla</h3><p>Developer Mode'u aç ve Tizen TV'deki Host PC IP alanına telefonun Wi-Fi IP'sini gir.</p></div>
           </article>
           <article class="setup-item glass reveal delay-2">
             <span class="setup-num">03</span>
-            <div><h3>Cihazları eşleştir</h3><p>TV IP adresini ve Türkbox'ın gösterdiği eşleştirme kodunu kullan.</p></div>
+          <div><h3>Tizen WGT paketini yükle</h3><p>Türkbox'taki Tizen uygulaması yükleme ekranında TV IP'sini girip imzalı paketi kur. SDB bağlantısı 26101 portunu kullanır.</p></div>
           </article>
           <article class="setup-item glass reveal delay-3">
             <span class="setup-num">04</span>
-            <div><h3>Remote Play'i aç</h3><p>Altyazı alanını bir kez ayarla, ardından oyununa devam et.</p></div>
+          <div><h3>Yakalama ve eşleştirmeyi başlat</h3><p>Türkbox'tan ekran yakalamayı başlat; telefon IP'si ve 6 haneli kodu TV alıcısına gir.</p></div>
           </article>
+          <article class="setup-item glass reveal">
+          <span class="setup-num">05</span>
+          <div><h3>Remote Play'i aç ve alanı kilitle</h3><p>PS4/Xbox Remote Play'i ayrıca çalıştır. Altyazı kutusunu yerleştir, bildirimden kilitle ve TV alıcısını açık bırak.</p></div>
+          </article>
+        </div>
+      </div>
+      <div class="platform-grid" style="margin-top:24px">
+        <article class="platform-card glass reveal">
+          <div class="section-kicker">Samsung Tizen</div>
+          <h3>2019 RU7400 hedefi</h3>
+          <p>TV uygulaması Tizen 5.0 için hazırlanmıştır. TV alıcısı, telefonun WebSocket bağlantısına 8765 portunda bağlanır. Şeffaf HDMI arka planı Tizen Window API ve TV desteğine bağlıdır; oynarken uygulama açık kalmalıdır.</p>
+        </article>
+        <article class="platform-card glass reveal delay-1">
+          <div class="section-kicker">webOS tarayıcısı</div>
+          <h3>Telefonun yerel sayfasını aç</h3>
+          <p>Android uygulamasındaki webOS bölümünde gösterilen <code>http://telefon-ip:8766/</code> adresini TV tarayıcısında kullan. HDMI kaynağını seç, sonra IP ve kodla eşleştir. GitHub Pages sayfası bu akışın yerine geçmez.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section" id="gizlilik">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <div class="section-kicker">Veri ve gizlilik</div>
+          <h2>Ne nerede işleniyor?<br><span class="gradient-text">Açıkça görelim.</span></h2>
+          <p>Türkbox yerel işlemeyi önceler; harici sağlayıcıları yalnızca kullanıcı yapılandırdığında kullanır.</p>
+        </div>
+        <div class="privacy-grid">
+          <article class="privacy-card glass reveal">
+            <div class="section-kicker">Cihazda</div>
+            <h3>OCR ve varsayılan çeviri</h3>
+            <p>Ekran yakalama ve ML Kit OCR Android telefonda yapılır. Varsayılan çeviri çevrimdışı ML Kit modelidir; ilk kullanımda modelin indirilmesi internet isteyebilir. Telefon ile TV arasındaki altyazı aktarımı eşleştirme kodlu yerel ağ WebSocket'idir.</p>
+          </article>
+          <article class="privacy-card glass reveal delay-1">
+            <div class="section-kicker">İsteğe bağlı bulut</div>
+            <h3>DeepL ve ElevenLabs</h3>
+            <p>DeepL etkinleştirilirse tanınan metin çeviri için DeepL'e gider. ElevenLabs etkinleştirilirse ses üretilecek metin ve seçilen Voice ID sağlayıcıya gönderilir. Sağlayıcı hesabı, kotası ve kendi gizlilik şartları ayrıca geçerlidir.</p>
+          </article>
+          <article class="privacy-card glass reveal delay-2">
+            <div class="section-kicker">Oyun kataloğu</div>
+            <h3>Ham oyun sesi saklanmaz</h3>
+            <p>Diyalog kaydı modunda dahili Remote Play sesinden en fazla 12 saniyelik bir bölüm geçici olarak RAM'de tutulur; bu fiziksel mikrofon değildir. Ham ses dosyası saklanmaz. Sayısal konuşmacı imzaları, profil ve diyaloglar uygulamanın özel yerel veritabanında kalır.</p>
+          </article>
+          <article class="privacy-card glass reveal delay-3">
+            <div class="section-kicker">Kimlik bilgileri</div>
+            <h3>API anahtarları Keystore'da</h3>
+            <p>DeepL/ElevenLabs anahtarları Android Keystore ile korunur ve HTML sayfasına eklenmez. Anahtarları veya kişisel token'ları GitHub deposuna, ekran görüntüsüne, hata raporuna ya da APK kaynaklarına koyma.</p>
+          </article>
+        </div>
+        <div class="data-flow reveal" aria-label="Veri akışının özeti">
+          <div><b>Remote Play → Telefon</b><span>Ekran yakalama, OCR ve bölge seçimi</span></div>
+          <div><b>Telefon → TV</b><span>Yerel ağda çevrilmiş metin ve görünüm</span></div>
+          <div><b>Telefon → Bulut</b><span>Yalnız DeepL/ElevenLabs ayarlanırsa metin</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" id="sinirlar">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <div class="section-kicker">Beklentileri doğru kuralım</div>
+          <h2>Özellikler kadar <span class="gradient-text">sınırlar da önemli.</span></h2>
+          <p>Bu proje kişisel kullanım için geliştiriliyor. Bazı akışların gerçek cihaz ve oyunlarda doğrulanması gerekiyor.</p>
+        </div>
+        <div class="limit-grid">
+          <article class="limit-card glass reveal">
+            <div class="section-kicker">Görüntü kaynağı</div>
+            <h3>HDMI yakalama yok</h3>
+            <p>Uygulama Xbox/PS4 HDMI görüntüsünü veya konsol sesini doğrudan yakalamaz. Telefonda görünen Remote Play görüntüsünü işler. TV'de altyazı katmanı için ilgili Tizen/webOS alıcısı açık kalmalıdır.</p>
+          </article>
+          <article class="limit-card glass reveal delay-1">
+            <div class="section-kicker">Deneysel yama</div>
+            <h3>The Evil Within verisi resmî değil</h3>
+            <p>Temel oyun verisi otomatik YouTube dökümü ve Türkçe yama anahtar sırasından hazırlanmıştır. Yanlış karşılık gösterebilir, DLC içermez ve gerçek Xbox OCR eşleşmesi doğrulanmamıştır. OCR'ın okuyamadığı bir metni hiçbir çeviri yedeği düzeltemez.</p>
+          </article>
+          <article class="limit-card glass reveal delay-2">
+            <div class="section-kicker">Dublaj eşleşmesi</div>
+            <h3>Karakter tanıma değildir</h3>
+            <p>Ses benzerliği yalnızca yaklaşık konuşmacı gruplaması yapar; isim veya cinsiyet bulmaz. Kısa, örtüşen ya da efektli satırlar yanlış gruplandırılabilir. Oyun kataloğunda oynatma tam OCR metin eşleşmesine bağlıdır.</p>
+          </article>
+          <article class="limit-card glass reveal delay-3">
+            <div class="section-kicker">Cihaz doğrulaması</div>
+            <h3>Her TV'de aynı sonuç garanti değil</h3>
+            <p>Hedef Samsung UE55RU7400UXTK (2019, Tizen 5.0). Şeffaf HDMI arka planı, altyazı hizası, TTS'nin HDMI sesiyle birlikte çalması ve webOS otomatik aktarımı hedef donanımda ayrıca test edilmelidir. Android uygulaması HDMI sesini TV'ye yönlendirmez.</p>
+          </article>
+        </div>
+        <div class="notice reveal">Bağımsız bir yardımcı uygulamadır; Microsoft/Xbox, Sony/PlayStation veya Samsung tarafından onaylanmış ya da desteklenen resmî ürün değildir.</div>
+      </div>
+    </section>
+
+    <section class="content-section" id="sss">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <div class="section-kicker">SSS · Sık sorulan sorular</div>
+          <h2>Başlamadan önce <span class="gradient-text">merak edilenler.</span></h2>
+          <p>Soruyu açarak bağlantı, izin, çeviri, ses ve desteklenen cihazlarla ilgili ayrıntıları gör.</p>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item glass reveal">
+            <summary>Türkbox Xbox'ın HDMI görüntüsünü doğrudan mı çeviriyor?</summary>
+            <p>Hayır. Telefon ekranındaki PS4 veya Xbox Remote Play görüntüsünü yakalar. Konsolun HDMI sinyaline, oyun dosyalarına ya da dahili altyazı sistemine erişmez.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>Xbox Series S ve PlayStation oyunları destekleniyor mu?</summary>
+            <p>Telefonunda ilgili konsolun Remote Play görüntüsü çalışıyorsa Android OCR/çeviri akışı aynı şekilde kullanılabilir. Türkbox Remote Play uygulamasını veya oyunu kendisi başlatmaz.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>Telefon ile TV neden aynı Wi-Fi ağına bağlanmalı?</summary>
+            <p>Android uygulaması metni TV alıcısına yerel ağdaki, 6 haneli eşleştirme koduyla korunan WebSocket üzerinden gönderir. Misafir ağı veya cihaz yalıtımı bu bağlantıyı engelleyebilir.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>İnternet bağlantısı olmadan kullanabilir miyim?</summary>
+            <p>Varsayılan ML Kit çevirisi çevrimdışı çalışır, ancak çeviri modelinin ilk indirilmesi internet gerektirebilir. DeepL ve ElevenLabs seçenekleri internet ve sağlayıcı hesabı/kotası ister.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>Uygulama oyun sesini TV'nin HDMI hoparlörlerine aktarır mı?</summary>
+            <p>Hayır. Remote Play sesi telefon/tarayıcı tarafından oynatılır; uygulama konsol HDMI sesini TV'ye yönlendiremez. TV'nin üretilen sesi HDMI oyun sesiyle karıştırması modele ve oynatıcıya bağlıdır.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>Diyalog kaydederken mikrofon izni neden isteniyor?</summary>
+            <p>Yalnız Türkçe Dublaj bölümündeki kayıt modu, Android desteklediğinde Remote Play'in dahili oynatma sesini analiz etmek için RECORD_AUDIO izni ister. Fiziksel mikrofon kullanılmaz ve ham ses kalıcı olarak saklanmaz. Normal altyazı çevirisi bu oyun sesi kaydını kullanmaz.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>ElevenLabs kullanmadan Türkçe ses alabilir miyim?</summary>
+            <p>Canlı/test sesinde Android'in kurulu Türkçe TTS motoru yedek olarak kullanılabilir. Oyun kataloğundaki diyalogları topluca önceden dublajlamak için ElevenLabs API anahtarı gerekir.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>Dublajlı oyna her oyun diyalogunu seslendiriyor mu?</summary>
+            <p>Hayır. Yalnız kaydedilen ve ses dosyası hazır olan diyaloglar, OCR metni katalogla eşleştiğinde oynatılır. Eşleşmeyen veya hazırlanmayan satırlar altyazı olarak kalır; canlı TTS yedeği yapılmaz.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>The Evil Within yama çevirisi resmî ve tamamlanmış mı?</summary>
+            <p>Hayır. Yalnız temel oyun için deneysel sıra eşleştirmesidir; orijinal İngilizce oyun localization'ı değildir, yanlış olabilir, DLC'leri kapsamaz ve gerçek Xbox OCR'ıyla doğrulanmamıştır.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>webOS TV'de neden GitHub Pages adresini kullanmıyorum?</summary>
+            <p>webOS alıcısı Android uygulamasının yerel HTTP adresinden (port 8766) açılır ve telefondaki yerel WebSocket'e bağlanır. GitHub Pages HTTPS sitesi yerel alıcının yerine geçmez; adresi uygulamadaki webOS bölümünden al.</p>
+          </details>
+          <details class="faq-item glass reveal">
+            <summary>Hangi TV'de çalışacağı garanti ediliyor?</summary>
+            <p>Tizen paketi Tizen 5.0 ve 2019 Samsung RU7400 hedeflenerek geliştirilmiştir; başka modellerde aynı HDMI katmanı garanti edilmez. webOS alıcısının yerel hosting ve otomatik aktarımı da gerçek TV'de doğrulanmalıdır.</p>
+          </details>
         </div>
       </div>
     </section>
@@ -602,14 +858,16 @@
         <p>Türkbox, oyun ekranında gördüğün altyazıları anlamana yardımcı olmak için tasarlanıyor.</p>
         <div class="actions">
           <a class="button button-primary" href="#kurulum">Kurulum adımlarını gör <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="button button-quiet" href="https://github.com/posmakinesi/turkbox" target="_blank" rel="noopener noreferrer">GitHub deposu ↗</a>
         </div>
+        <p class="repo-note">GitHub Pages tanıtım ve kullanım bilgisidir; Android APK veya imzalı Tizen WGT indirme bağlantısı değildir. Anahtarları, imza dosyalarını ve lisans durumu incelenmemiş oyun verilerini herkese açık depoya eklemeden önce kontrol et.</p>
       </div>
     </section>
   </main>
 
   <footer class="wrap">
-    <a class="brand" href="#baslangic"><span class="brand-mark" aria-hidden="true">T</span><span>Türkbox</span></a>
-    <div class="footer-note">Bağımsız bir yardımcı uygulama tasarımıdır; Xbox, PlayStation ve Samsung ile resmi bağlantısı yoktur.</div>
+    <a class="brand" href="#baslangic"><span class="brand-mark" aria-hidden="true"><img src="assets/turkbox-logo.jpg" alt=""></span><span>Türkbox</span></a>
+    <div class="footer-note">Bağımsız bir yardımcı uygulama projesidir. Xbox, PlayStation ve Samsung ile resmî bağlantısı yoktur. <a href="#sinirlar">Uyumluluk ve deneysel özellikler</a></div>
   </footer>
 
   <script>
