@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="tr" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Türkbox — Remote Play altyazısı TV’de Türkçe</title>
+<meta name="description" content="Türkbox, telefonda açık PS4 ve Xbox Remote Play görüntüsünden İngilizce altyazıyı okur, Türkçeye çevirir ve TV’de oyunun üstüne yazar. Android, Samsung Tizen ve webOS.">
+<meta name="theme-color" content="#0c1214">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap">
+<style>
+/* ---------------------------------------------------------------
+   Tokens
+   --------------------------------------------------------------- */
+:root{
+  --bg:#0c1214;
+  --bg-deep:#080d0f;
+  --panel:#101a1d;
+  --panel-2:#0b1315;
+  --line:rgba(236,228,214,.10);
+  --line-soft:rgba(236,228,214,.055);
+  --text:#eee7d9;
+  --muted:#a3aea8;
+  --dim:#7f8d87;
+  --amber:#e0a75c;
+  --amber-bright:#f0bd79;
+  --sage:#83aaa0;
+  --sans:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --serif:"Newsreader","Iowan Old Style",Georgia,"Times New Roman",serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --pad:clamp(1.15rem,5vw,3rem);
+  --head-h:72px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{
+  color-scheme:dark;
+  scroll-behavior:smooth;
+  -webkit-text-size-adjust:100%;
+}
+html,body{margin:0}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
+ul,ol{margin:0;padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+::selection{background:rgba(224,167,92,.26);color:#fff8ec}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:2px}
+
+/* ---------------------------------------------------------------
+   Shared layout
+   --------------------------------------------------------------- */
+.wrap{width:min(1200px,100% - (var(--pad) * 2));margin-inline:auto}
+.section{padding-block:clamp(3.8rem,7.5vw,6.5rem);scroll-margin-top:calc(var(--head-h) + 16px)}
+.section--tight{padding-block:clamp(3rem,5.5vw,4.5rem)}
+.section--line{border-top:1px solid var(--line-soft)}
+
+.section__head{
+  display:grid;
+  grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+  gap:clamp(1rem,4vw,3.5rem);
+  align-items:end;
+  margin-bottom:clamp(2rem,4vw,3.2rem);
+}
+.section__head h2{
+  font-family:var(--serif);
+  font-size:clamp(1.9rem,3.3vw,2.85rem);
+  line-height:1.12;
+  letter-spacing:-.012em;
+}
+.section__head p{
+  color:var(--muted);
+  font-size:1rem;
+  max-width:44ch;
+  margin:0 0 .3rem;
+}
+
+/* small, quiet section label — sentence case, not a tracked eyebrow */
+.chapter{
+  display:inline-flex;
+  align-items:center;
+  gap:.55rem;
+  font-size:.78rem;
+  color:var(--dim);
+  margin-bottom:.9rem;
+  letter-spacing:.01em;
+}
+.chapter::before{
+  content:"";
+  width:18px;height:1px;
+  background:var(--amber);
+  opacity:.75;
+}
+
+.skip{
+  position:absolute;left:-9999px;top:0;z-index:100;
+  background:var(--amber);color:#171008;
+  padding:.7rem 1rem;font-size:.9rem;font-weight:500;
+}
+.skip:focus{left:.75rem;top:.75rem}
+
+.grain{
+  position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.032;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:160px 160px;
+}
+
+/* ---------------------------------------------------------------
+   Header
+   --------------------------------------------------------------- */
+.site-head{
+  position:sticky;top:0;z-index:60;
+  border-bottom:1px solid transparent;
+  background:rgba(12,18,20,.55);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+  transition:background .3s var(--ease),border-color .3s var(--ease);
+}
+.site-head.is-stuck{background:rgba(8,13,15,.9);border-bottom-color:var(--line-soft)}
+.nav{position:relative;display:flex;align-items:center;justify-content:space-between;height:var(--head-h)}
+.brand{display:inline-flex;align-items:center;gap:.6rem;color:var(--text)}
+.brand__mark{width:26px;height:22px;color:var(--muted);transition:color .3s var(--ease)}
+.brand:hover .brand__mark{color:var(--text)}
+.brand__mark .mark-line{stroke:var(--amber)}
+.brand__word{font-family:var(--serif);font-size:1.4rem;letter-spacing:-.01em;line-height:1}
+.nav__links{display:flex;align-items:center;gap:clamp(1rem,2.4vw,2rem)}
+.nav__link{
+  position:relative;font-size:.88rem;color:var(--muted);padding:.35rem 0;
+  transition:color .25s var(--ease);
+}
+.nav__link::after{
+  content:"";position:absolute;left:0;right:0;bottom:.1rem;height:1px;
+  background:var(--amber);transform:scaleX(0);transform-origin:right;
+  transition:transform .32s var(--ease);
+}
+.nav__link:hover{color:var(--text)}
+.nav__link:hover::after{transform:scaleX(1);transform-origin:left}
+.menu-btn{display:none;width:40px;height:40px;margin-right:-8px;align-items:center;justify-content:center;flex-direction:column;gap:5px}
+.menu-btn span{display:block;width:20px;height:1.5px;background:var(--text);transition:transform .25s var(--ease),opacity .2s}
+.menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+/* ---------------------------------------------------------------
+   Hero
+   --------------------------------------------------------------- */
+.hero{position:relative;overflow:hidden}
+.hero::before{
+  content:"";position:absolute;inset:-30% -10% auto 30%;height:80%;
+  background:radial-gradient(closest-side,rgba(131,170,160,.12),transparent 72%);
+  pointer-events:none;
+}
+.hero__inner{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  gap:clamp(2rem,5vw,4.5rem);
+  align-items:center;
+  padding-block:clamp(2rem,4.5vw,3.5rem) clamp(2.8rem,6vw,4.6rem);
+}
+.hero__title{
+  font-family:var(--serif);
+  font-size:clamp(2.3rem,4.4vw,3.5rem);
+  font-weight:400;
+  line-height:1.06;
+  letter-spacing:-.018em;
+  margin:0;
+}
+.hero__sub{
+  color:var(--muted);
+  font-size:1.02rem;
+  line-height:1.7;
+  max-width:41ch;
+  margin:1.45rem 0 0;
+}
+.hero__actions{display:flex;align-items:center;flex-wrap:wrap;gap:1.15rem;margin-top:2rem}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:.85rem 1.35rem;
+  border-radius:3px;
+  font-size:.92rem;font-weight:500;
+  transition:background .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),transform .25s var(--ease);
+  touch-action:manipulation;
+}
+.btn--solid{background:var(--amber);color:#191007}
+.btn--solid:hover{background:var(--amber-bright);transform:translateY(-1px)}
+.btn--solid:active{transform:translateY(0)}
+.link-quiet{
+  font-size:.92rem;color:var(--muted);
+  border-bottom:1px solid var(--line);
+  padding-bottom:.15rem;
+  transition:color .25s var(--ease),border-color .25s var(--ease);
+}
+.link-quiet:hover{color:var(--text);border-color:var(--amber)}
+.hero__meta{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .85rem;
+  margin:1.8rem 0 0;font-size:.78rem;color:var(--dim);
+}
+.hero__meta span{display:inline-flex;align-items:center;gap:.85rem}
+.hero__meta span + span::before{content:"";width:3px;height:3px;border-radius:50%;background:var(--dim);opacity:.7}
+
+/* --- TV mock --- */
+.tv{margin:0;width:100%}
+.tv__frame{
+  padding:clamp(6px,.7vw,10px);
+  border-radius:clamp(10px,1.3vw,15px);
+  background:linear-gradient(180deg,#182427,#080d0f 62%);
+  border:1px solid rgba(236,228,214,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 45px 90px -45px rgba(0,0,0,.95),0 0 130px -50px rgba(224,167,92,.22);
+}
+.tv__screen{
+  position:relative;
+  aspect-ratio:16/9;
+  border-radius:clamp(6px,.9vw,10px);
+  overflow:hidden;
+  background:#04090b;
+  container-type:inline-size;
+  isolation:isolate;
+}
+.scene{position:absolute;inset:0;z-index:0}
+.scene__sky{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(1.5px 1.5px at 14% 24%,rgba(238,231,217,.45),transparent),
+    radial-gradient(1.5px 1.5px at 31% 13%,rgba(238,231,217,.3),transparent),
+    radial-gradient(1px 1px at 48% 27%,rgba(238,231,217,.38),transparent),
+    radial-gradient(1px 1px at 57% 9%,rgba(238,231,217,.28),transparent),
+    radial-gradient(1.5px 1.5px at 88% 31%,rgba(238,231,217,.35),transparent),
+    radial-gradient(1px 1px at 76% 8%,rgba(238,231,217,.25),transparent),
+    linear-gradient(180deg,#0a1a20 0%,#102a31 40%,#1b3a3c 63%,#0a1416 100%);
+}
+.scene__glow{
+  position:absolute;left:18%;bottom:6%;width:46%;aspect-ratio:1;
+  background:radial-gradient(closest-side,rgba(224,167,92,.32),rgba(224,167,92,0) 70%);
+  filter:blur(10px);
+}
+.scene__moon{
+  position:absolute;left:68%;top:16%;width:11%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 40% 38%,#efe8d6 0%,#d3dbd0 46%,rgba(211,219,208,.35) 62%,rgba(211,219,208,0) 74%);
+  opacity:.62;
+  filter:blur(.8px);
+  box-shadow:0 0 90px 30px rgba(222,232,218,.09);
+}
+.scene__ridge{position:absolute;left:0;bottom:0;width:100%;height:auto}
+.scene__mist{
+  position:absolute;left:-15%;right:-15%;top:56%;height:38%;
+  background:radial-gradient(60% 100% at 50% 50%,rgba(198,216,210,.20),transparent 72%);
+  filter:blur(14px);
+  animation:drift 26s ease-in-out infinite alternate;
+}
+.tv__vignette{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(125% 95% at 50% 42%,transparent 52%,rgba(0,0,0,.6));
+}
+.tv__scanlines{
+  position:absolute;inset:0;z-index:5;pointer-events:none;opacity:.22;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.5) 0 1px,transparent 1px 3px);
+}
+.tv__hud{
+  position:absolute;z-index:4;top:3.5%;left:3.5%;
+  display:flex;align-items:center;gap:.45em;
+  font-size:max(8px,1.35cqw);
+  letter-spacing:.09em;
+  color:rgba(238,231,217,.5);
+}
+.tv__dot{
+  width:.5em;height:.5em;border-radius:50%;
+  background:var(--sage);
+  box-shadow:0 0 0 .18em rgba(131,170,160,.18);
+}
+.tv__size{
+  position:absolute;z-index:4;top:3.5%;right:3.5%;
+  font-size:max(9px,1.5cqw);
+  color:rgba(238,231,217,.6);
+  border:1px solid rgba(238,231,217,.22);
+  border-radius:2px;
+  padding:.1em .4em;
+  line-height:1.5;
+}
+.tv__subs{
+  position:absolute;z-index:4;left:6%;right:6%;bottom:7%;
+  display:flex;flex-direction:column;align-items:center;gap:.6em;
+  text-align:center;
+}
+.capture{
+  position:relative;
+  display:inline-block;
+  max-width:90%;
+  padding:.5em .8em .55em;
+  border:1px dashed rgba(224,167,92,.5);
+  border-radius:3px;
+  background:rgba(4,9,10,.42);
+  transition:border-color .4s var(--ease),background .4s var(--ease);
+}
+.capture.is-locked{border-style:solid;border-color:rgba(224,167,92,.8);background:rgba(4,9,10,.58)}
+.capture__tag{
+  position:absolute;top:-1.75em;left:-1px;
+  font-size:max(7px,1.2cqw);
+  letter-spacing:.05em;
+  color:rgba(224,167,92,.9);
+  white-space:nowrap;
+}
+.capture__scan{position:absolute;inset:0;overflow:hidden;border-radius:2px;pointer-events:none}
+.capture__scan::before{
+  content:"";position:absolute;left:0;right:0;top:-40%;height:40%;
+  background:linear-gradient(180deg,transparent,rgba(224,167,92,.34),transparent);
+  animation:scan 2.6s linear infinite;
+}
+.capture.is-locked .capture__scan::before{animation:none;opacity:0}
+.tv__en{
+  margin:0;
+  font-size:max(10px,2cqw);
+  line-height:1.35;
+  color:rgba(244,240,231,.86);
+  transition:opacity .45s var(--ease);
+}
+.tv__tr{
+  margin:0;
+  font-size:max(13px,3.4cqw);
+  font-weight:500;
+  line-height:1.32;
+  letter-spacing:-.005em;
+  color:#fff9ee;
+  background:rgba(5,8,9,.62);
+  padding:.12em .5em .2em;
+  border-radius:2px;
+  text-shadow:0 1px 2px rgba(0,0,0,.6);
+}
+.js .tv__tr{opacity:0;transform:translateY(.4em);transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.js .tv__tr.is-shown{opacity:1;transform:none}
+.js .tv__en.is-out{opacity:0}
+.tv__cap{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding-top:.85rem;
+  font-size:.76rem;line-height:1.5;color:var(--dim);
+}
+.tv__cap p{margin:0;max-width:34ch}
+.tv__toggle{
+  display:inline-flex;align-items:center;gap:.45rem;flex:none;
+  font-size:.74rem;color:var(--muted);
+  border:1px solid var(--line);
+  border-radius:2px;
+  padding:.32rem .55rem;
+  transition:color .2s var(--ease),border-color .2s var(--ease);
+  touch-action:manipulation;
+}
+.tv__toggle:hover{color:var(--text);border-color:rgba(224,167,92,.45)}
+.tv__toggle-icon{
+  width:8px;height:8px;border-left:1px solid currentColor;border-right:1px solid currentColor;
+}
+.tv__toggle.is-paused .tv__toggle-icon{
+  border:0;border-top:5px solid transparent;border-bottom:5px solid transparent;
+  border-left:7px solid currentColor;width:0;height:0;
+}
+
+/* ---------------------------------------------------------------
+   Statement band
+   --------------------------------------------------------------- */
+.band{
+  border-block:1px solid var(--line-soft);
+  background:linear-gradient(180deg,rgba(131,170,160,.045),rgba(131,170,160,0) 70%);
+}
+.band__inner{
+  display:grid;
+  grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
+  gap:clamp(1.5rem,4vw,4rem);
+  padding-block:clamp(3rem,6.5vw,5rem);
+  align-items:start;
+}
+.band h2{
+  font-family:var(--serif);
+  font-size:clamp(1.75rem,3.1vw,2.65rem);
+  line-height:1.15;
+  letter-spacing:-.01em;
+  max-width:16ch;
+}
+.band__body{color:var(--muted);font-size:1rem;max-width:48ch}
+.band__body p + p{margin-top:.9em}
+.pull{
+  margin:1.7rem 0 0;
+  padding-left:1.1rem;
+  border-left:1px solid rgba(224,167,92,.45);
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:clamp(1.1rem,1.9vw,1.4rem);
+  line-height:1.4;
+  color:var(--text);
+}
+
+/* ---------------------------------------------------------------
+   Pipeline
+   --------------------------------------------------------------- */
+.pipe{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(1.25rem,2.6vw,2.2rem);
+  position:relative;
+  margin-top:clamp(2.2rem,4vw,3rem);
+}
+.pipe__rail{
+  position:absolute;left:0;right:0;top:4px;height:1px;
+  background:linear-gradient(90deg,var(--line),rgba(224,167,92,.32) 55%,var(--line));
+  transform-origin:left;
+}
+.js .pipe__rail{transform:scaleX(0);transition:transform 1.5s var(--ease) .15s}
+.js .pipe.is-in .pipe__rail{transform:scaleX(1)}
+.pipe__step{padding-right:.4rem}
+.pipe__marker{display:flex;align-items:center;gap:.7rem;margin-bottom:1.15rem}
+.pipe__dot{
+  width:9px;height:9px;border-radius:50%;flex:none;
+  border:1px solid var(--dim);background:var(--bg);
+  transition:background .5s var(--ease),border-color .5s var(--ease),box-shadow .5s var(--ease);
+}
+.js .pipe__dot{border-color:rgba(131,170,160,.5)}
+.js .pipe.is-in .pipe__dot{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 4px rgba(224,167,92,.12)}
+.js .pipe.is-in .pipe__step:nth-child(2) .pipe__dot{transition-delay:.15s}
+.js .pipe.is-in .pipe__step:nth-child(3) .pipe__dot{transition-delay:.5s}
+.js .pipe.is-in .pipe__step:nth-child(4) .pipe__dot{transition-delay:.85s}
+.js .pipe.is-in .pipe__step:nth-child(5) .pipe__dot{transition-delay:1.2s}
+.pipe__num{
+  font-family:var(--serif);font-size:.92rem;line-height:1;
+  color:var(--dim);
+}
+.pipe__step h3{font-size:1.02rem;font-weight:500;margin-bottom:.4rem;letter-spacing:-.005em}
+.pipe__step p{color:var(--muted);font-size:.92rem;line-height:1.65;margin:0;max-width:28ch}
+
+/* ---------------------------------------------------------------
+   Feature list
+   --------------------------------------------------------------- */
+.feats{margin-top:clamp(1.5rem,3vw,2.4rem);border-bottom:1px solid var(--line-soft)}
+.feat{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);
+  gap:clamp(.75rem,3vw,2.5rem);
+  padding:1.5rem 0 1.6rem;
+  border-top:1px solid var(--line-soft);
+}
+.feat::before{
+  content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:1.5px;
+  background:var(--amber);
+  transform:scaleY(0);transform-origin:top;
+  transition:transform .35s var(--ease);
+}
+.feat:hover::before,.feat:focus-within::before{transform:scaleY(1)}
+.feat h3{
+  font-size:1.02rem;font-weight:500;letter-spacing:-.005em;
+  padding-top:.05rem;
+  transition:color .3s var(--ease);
+}
+.feat:hover h3{color:var(--amber)}
+.feat p{margin:0;color:var(--muted);font-size:.96rem;line-height:1.68;max-width:62ch}
+
+/* ---------------------------------------------------------------
+   Dubbing
+   --------------------------------------------------------------- */
+.dub{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(2rem,4.5vw,4rem);align-items:start}
+.dub h2{
+  font-family:var(--serif);
+  font-size:clamp(1.8rem,3vw,2.5rem);
+  line-height:1.14;
+  letter-spacing:-.012em;
+  max-width:19ch;
+}
+.dub__lead{color:var(--muted);margin-top:1.2rem;max-width:44ch}
+.dub__list{margin-top:1.6rem;display:grid;gap:.95rem}
+.dub__list li{
+  position:relative;
+  padding-left:1.15rem;
+  color:var(--muted);
+  font-size:.94rem;
+  line-height:1.65;
+  max-width:46ch;
+}
+.dub__list li::before{
+  content:"";position:absolute;left:0;top:.62em;
+  width:5px;height:5px;border-radius:50%;
+  background:var(--amber);opacity:.6;
+}
+.dub__note{
+  margin-top:1.5rem;
+  font-size:.82rem;line-height:1.6;color:var(--dim);
+  border-top:1px solid var(--line-soft);
+  padding-top:1rem;
+  max-width:44ch;
+}
+.cat{
+  background:linear-gradient(180deg,#101a1d,#0a1214);
+  border:1px solid var(--line);
+  border-radius:7px;
+  padding:clamp(.95rem,2.2vw,1.35rem);
+}
+.cat__head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+  padding-bottom:.85rem;border-bottom:1px solid var(--line);
+}
+.cat__title{font-family:var(--serif);font-size:1.06rem;letter-spacing:-.005em}
+.cat__status{font-size:.72rem;color:var(--sage);display:inline-flex;align-items:center;gap:.4rem}
+.cat__status::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sage)}
+.cat__list{margin-top:.2rem}
+.line{padding:1rem 0 .95rem;border-bottom:1px solid var(--line-soft)}
+.line:last-child{border-bottom:0;padding-bottom:.35rem}
+.line__tr{margin:0;font-size:1rem;line-height:1.5;color:var(--text)}
+.line__en{margin:.2rem 0 0;font-size:.78rem;color:var(--dim);line-height:1.5}
+.line__row{display:flex;align-items:center;gap:.9rem;margin-top:.7rem;justify-content:space-between}
+.wave{display:flex;align-items:center;gap:2.5px;height:22px;flex:1;min-width:0;overflow:hidden}
+.wave i{
+  display:block;width:3px;flex:none;border-radius:1.5px;
+  height:calc(var(--h) * 1.75px);
+  background:rgba(224,167,92,.38);
+  transform-origin:center;
+  transition:background .3s var(--ease);
+}
+.line:hover .wave i{background:rgba(224,167,92,.62);animation:eq .9s var(--ease) infinite alternate;animation-delay:calc(var(--d) * 1ms)}
+.voice{
+  flex:none;display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.7rem;line-height:1;
+  color:var(--muted);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:.35rem .55rem;
+  white-space:nowrap;
+}
+.voice::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--dim)}
+.voice--on{color:#f4c88c;border-color:rgba(224,167,92,.35);background:rgba(224,167,92,.07)}
+.voice--on::before{background:var(--amber)}
+.cat__foot{margin:.85rem 0 0;font-size:.72rem;color:var(--dim);line-height:1.5}
+
+/* ---------------------------------------------------------------
+   Compatibility table
+   --------------------------------------------------------------- */
+.compat{width:100%;border-collapse:collapse;margin-top:.5rem}
+.compat caption{
+  text-align:left;color:var(--dim);font-size:.8rem;padding-bottom:.9rem;
+  caption-side:top;
+}
+.compat th{
+  text-align:left;font-size:.74rem;font-weight:500;letter-spacing:.02em;
+  color:var(--dim);
+  padding:.55rem .9rem .7rem 0;
+  border-bottom:1px solid var(--line);
+}
+.compat td{
+  padding:1.1rem .9rem 1.15rem 0;
+  border-bottom:1px solid var(--line-soft);
+  vertical-align:top;
+  color:var(--muted);
+  font-size:.94rem;
+  line-height:1.6;
+}
+.compat td:first-child{color:var(--text);font-size:.98rem;width:27%}
+.compat td:last-child{width:38%}
+.compat td:last-child{padding-right:0}
+.code{
+  font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  font-size:.84em;
+  color:#c9bb9e;
+  background:rgba(236,228,214,.06);
+  border-radius:2px;
+  padding:.1em .35em;
+  font-variant-numeric:tabular-nums;
+}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ---------------------------------------------------------------
+   Release
+   --------------------------------------------------------------- */
+.release{
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.release__top{
+  display:grid;
+  grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+}
+.release__lead{
+  padding:clamp(1.3rem,2.6vw,2rem) clamp(1.2rem,3vw,2.4rem) clamp(1.4rem,2.6vw,2.1rem) 0;
+  border-right:1px solid var(--line-soft);
+}
+.release__kicker{margin:0 0 .4rem;font-size:.78rem;color:var(--dim)}
+.release__version{
+  margin:0;
+  font-family:var(--serif);
+  font-size:clamp(2.6rem,5vw,3.9rem);
+  line-height:1;
+  letter-spacing:-.02em;
+}
+.release__actions{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem 1rem;margin-top:1.6rem}
+.release__size{font-size:.8rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.release__links{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem .8rem;margin:1rem 0 0;font-size:.8rem}
+.release__links a{color:var(--dim);border-bottom:1px solid transparent;transition:color .2s var(--ease),border-color .2s var(--ease)}
+.release__links a:hover{color:var(--text);border-bottom-color:var(--amber)}
+.release__links span{color:var(--dim);opacity:.5}
+.release__hint{margin:.75rem 0 0;font-size:.76rem;line-height:1.6;color:var(--dim)}
+.release__spec{
+  margin:0;
+  padding:clamp(1.3rem,2.6vw,2rem) 0 clamp(1.4rem,2.6vw,2.1rem) clamp(1.2rem,3vw,2.4rem);
+  display:grid;
+  align-content:start;
+}
+.release__spec > div{
+  display:grid;
+  grid-template-columns:6.2rem minmax(0,1fr);
+  gap:.9rem;
+  padding:.62rem 0;
+  border-top:1px solid var(--line-soft);
+}
+.release__spec > div:first-child{border-top:0;padding-top:0}
+.release__spec dt{font-size:.78rem;color:var(--dim)}
+.release__spec dd{margin:0;font-size:.9rem;line-height:1.55;color:var(--text)}
+.release__spec dd span{font-size:.82rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.release__verify{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:.55rem 1rem;
+  padding:.9rem 0;
+  border-top:1px solid var(--line-soft);
+}
+.release__verify-label{min-width:6.2rem;font-size:.78rem;color:var(--dim)}
+.release__verify code{
+  font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  font-size:.72rem;
+  line-height:1.5;
+  color:#c9bb9e;
+  background:rgba(236,228,214,.06);
+  border-radius:2px;
+  padding:.28rem .45rem;
+  word-break:break-all;
+  -webkit-user-select:all;
+  user-select:all;
+}
+.hash-copy{
+  font-size:.7rem;color:var(--muted);
+  border:1px solid var(--line);border-radius:2px;
+  padding:.26rem .5rem;
+  transition:color .2s var(--ease),border-color .2s var(--ease);
+}
+.hash-copy:hover{color:var(--text);border-color:rgba(224,167,92,.45)}
+@media (pointer:coarse){
+  .hash-copy{padding:.55rem .8rem;font-size:.74rem}
+}
+.release__notes{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(1.2rem,4vw,3rem);
+  padding-top:1.5rem;
+}
+.release__notes h3{margin:0 0 .65rem;font-size:.8rem;font-weight:500;color:var(--dim)}
+.release__notes ul{display:grid;gap:.42rem}
+.release__notes li{position:relative;padding-left:1rem;font-size:.9rem;line-height:1.6;color:var(--muted)}
+.release__notes li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:1px;background:var(--dim);opacity:.8}
+.release__warn{
+  display:grid;
+  grid-template-columns:minmax(0,11rem) minmax(0,1fr);
+  gap:.3rem 1.6rem;
+  margin-top:1.4rem;
+  padding:1rem 1.15rem 1.05rem;
+  border-left:2px solid rgba(224,167,92,.55);
+  background:rgba(224,167,92,.05);
+  font-size:.85rem;line-height:1.75;color:var(--muted);
+}
+.release__warn p{margin:0;max-width:72ch}
+.release__warn-label{color:var(--text);font-weight:500}
+@media (max-width:900px){
+  .release__top{grid-template-columns:1fr}
+  .release__lead{border-right:0;border-bottom:1px solid var(--line-soft);padding-right:0}
+  .release__spec{padding-left:0}
+  .release__notes{grid-template-columns:1fr;gap:1.1rem}
+}
+@media (max-width:700px){
+  .release__warn{grid-template-columns:1fr;gap:.4rem}
+  .release__verify-label{min-width:0;width:100%}
+}
+@media (max-width:480px){
+  .release__spec > div{grid-template-columns:1fr;gap:.1rem}
+  .release__spec dt{font-size:.72rem}
+}
+
+/* ---------------------------------------------------------------
+   Setup steps
+   --------------------------------------------------------------- */
+.pipe--3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.steps-note{
+  position:relative;
+  margin-top:clamp(1.8rem,3.4vw,2.6rem);
+  padding:1.2rem 0 0 1rem;
+  border-top:1px solid var(--line-soft);
+  color:var(--dim);font-size:.82rem;line-height:1.7;
+  max-width:78ch;
+}
+.steps-note::before{
+  content:"";position:absolute;left:1px;top:1.2rem;bottom:0;width:1px;
+  background:rgba(224,167,92,.4);
+}
+
+/* ---------------------------------------------------------------
+   Limits
+   --------------------------------------------------------------- */
+.limits{display:grid;gap:0;max-width:88ch}
+.limits li{
+  position:relative;
+  padding:1.05rem 0 1.1rem 1.15rem;
+  border-top:1px solid var(--line-soft);
+  color:var(--muted);
+  font-size:.94rem;
+  line-height:1.7;
+}
+.limits li:last-child{border-bottom:1px solid var(--line-soft)}
+.limits li::before{
+  content:"";position:absolute;left:0;top:1.55rem;
+  width:6px;height:1px;background:var(--amber);opacity:.65;
+}
+.limits b{color:var(--text);font-weight:500}
+
+/* ---------------------------------------------------------------
+   FAQ
+   --------------------------------------------------------------- */
+.faq{max-width:900px;border-bottom:1px solid var(--line-soft)}
+.faq__item{border-top:1px solid var(--line-soft)}
+.faq__item summary{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;
+  padding:1.1rem 0;
+  cursor:pointer;
+  list-style:none;
+  font-size:1rem;
+  line-height:1.5;
+  color:var(--text);
+  transition:color .25s var(--ease);
+  touch-action:manipulation;
+}
+.faq__item summary::-webkit-details-marker{display:none}
+.faq__item summary:hover{color:var(--amber)}
+.faq__sign{position:relative;flex:none;width:11px;height:11px;margin-top:.42rem}
+.faq__sign::before,.faq__sign::after{
+  content:"";position:absolute;background:currentColor;opacity:.8;
+  transition:transform .28s var(--ease),opacity .28s;
+}
+.faq__sign::before{left:0;right:0;top:5px;height:1px}
+.faq__sign::after{top:0;bottom:0;left:5px;width:1px}
+.faq__item[open] .faq__sign::after{transform:scaleY(0)}
+.faq__a{
+  padding:0 2.5rem 1.25rem 0;
+  color:var(--muted);
+  font-size:.94rem;
+  line-height:1.7;
+  max-width:70ch;
+}
+
+/* ---------------------------------------------------------------
+   Footer
+   --------------------------------------------------------------- */
+.site-foot{border-top:1px solid var(--line-soft);background:var(--bg-deep);padding-block:clamp(2.8rem,5vw,4rem) 2rem}
+.site-foot__top{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.site-foot__big{
+  font-family:var(--serif);
+  font-size:clamp(1.6rem,3.4vw,2.6rem);
+  line-height:1.15;
+  letter-spacing:-.012em;
+  margin:0;
+  max-width:20ch;
+}
+.site-foot__up{
+  font-size:.82rem;color:var(--muted);
+  border-bottom:1px solid var(--line);
+  padding-bottom:.2rem;
+  transition:color .25s var(--ease),border-color .25s var(--ease);
+}
+.site-foot__up:hover{color:var(--text);border-color:var(--amber)}
+.site-foot__bottom{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  margin-top:clamp(2rem,4vw,3rem);padding-top:1.2rem;
+  border-top:1px solid var(--line-soft);
+  font-size:.76rem;color:var(--dim);
+}
+.site-foot__bottom p{margin:0}
+.site-foot .brand__word{font-size:1.1rem}
+.site-foot .brand__mark{width:20px;height:17px}
+
+/* ---------------------------------------------------------------
+   Motion
+   --------------------------------------------------------------- */
+@keyframes scan{
+  0%{top:-40%}
+  100%{top:100%}
+}
+@keyframes drift{
+  from{transform:translateX(-2.5%)}
+  to{transform:translateX(2.5%)}
+}
+@keyframes eq{
+  from{transform:scaleY(.55)}
+  to{transform:scaleY(1.15)}
+}
+
+/* ---------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------- */
+@media (max-width:960px){
+  .hero__inner{grid-template-columns:1fr;gap:2.4rem;padding-top:1.4rem}
+  .hero__title{max-width:20ch}
+  .hero__sub{max-width:46ch}
+  .band__inner{grid-template-columns:1fr;gap:1.6rem}
+  .band h2{max-width:22ch}
+  .section__head{grid-template-columns:1fr;align-items:start;gap:.9rem}
+  .section__head p{margin-top:.2rem}
+  .dub{grid-template-columns:1fr;gap:2.2rem}
+  .dub h2{max-width:26ch}
+}
+@media (max-width:860px){
+  .menu-btn{display:inline-flex}
+  .nav__links{
+    position:absolute;top:100%;left:calc(var(--pad) * -1);right:calc(var(--pad) * -1);
+    display:none;flex-direction:column;align-items:stretch;gap:0;
+    padding:.4rem var(--pad) 1.1rem;
+    background:#080d0f;
+    border-bottom:1px solid var(--line);
+    box-shadow:0 30px 40px -30px rgba(0,0,0,.9);
+  }
+  .nav__links.is-open{display:flex}
+  .nav__link{padding:.85rem 0;font-size:.95rem;border-bottom:1px solid var(--line-soft)}
+  .nav__link::after{display:none}
+  .pipe,.pipe--3{grid-template-columns:1fr 1fr;gap:1.6rem 1.5rem}
+  .pipe__rail{display:none}
+  .feat{grid-template-columns:1fr;gap:.35rem;padding:1.25rem 0 1.3rem}
+}
+@media (max-width:620px){
+  body{font-size:16px}
+  :root{--head-h:64px}
+  .pipe,.pipe--3{grid-template-columns:1fr;gap:1.5rem}
+  .pipe__step{border-top:1px solid var(--line-soft);padding-top:1rem}
+  .pipe__marker{margin-bottom:.7rem}
+  .pipe__step p{max-width:38ch}
+  .tv__cap{flex-direction:column;align-items:flex-start;gap:.6rem}
+  .compat thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .compat{display:block;width:100%}
+  .compat caption{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;padding:0}
+  .compat tbody{display:block}
+  .compat tr{display:block;padding:.9rem 0 1.05rem;border-bottom:1px solid var(--line-soft)}
+  .compat td{display:block;border:0;padding:.1rem 0;width:auto !important}
+  .compat td::before{
+    content:attr(data-label);
+    display:block;
+    font-size:.68rem;
+    letter-spacing:.04em;
+    color:var(--dim);
+    margin-bottom:.1rem;
+  }
+  .compat td:first-child{font-size:1rem;margin-bottom:.35rem}
+  .compat td:first-child::before{display:none}
+  .compat td:last-child{padding-top:.35rem;color:var(--dim);font-size:.82rem}
+  .faq__a{padding-right:.5rem}
+  .site-foot__bottom{gap:.5rem}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+  .scene__mist,.capture__scan,.tv__toggle{display:none}
+  .js .tv__tr{opacity:1;transform:none}
+}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">İçeriğe geç</a>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="site-head">
+  <div class="wrap">
+    <nav class="nav" aria-label="Ana menü">
+      <a class="brand" href="#top" aria-label="Türkbox, sayfa başı">
+        <svg class="brand__mark" viewBox="0 0 26 22" aria-hidden="true" focusable="false">
+          <rect x="1" y="1.5" width="24" height="16" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"/>
+          <path class="mark-line" d="M6 8.5h9M6 12.5h6" fill="none" stroke-width="1.7" stroke-linecap="round"/>
+          <path d="M9.5 20.5h7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".35"/>
+        </svg>
+        <span class="brand__word">türkbox</span>
+      </a>
+
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Menüyü aç">
+        <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav__links" id="nav-links">
+        <li><a class="nav__link" href="#nasil-calisir">Nasıl çalışır</a></li>
+        <li><a class="nav__link" href="#ozellikler">Özellikler</a></li>
+        <li><a class="nav__link" href="#dublaj">Dublaj</a></li>
+        <li><a class="nav__link" href="#kurulum">Kurulum</a></li>
+        <li><a class="nav__link" href="#sss">SSS</a></li>
+        <li><a class="nav__link" href="#indir">İndir</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero__inner">
+      <div class="hero__copy">
+        <h1 class="hero__title" id="hero-title">Telefon ekranındaki İngilizce altyazı, TV’de Türkçe.</h1>
+        <p class="hero__sub">Türkbox, telefonda açık Remote Play görüntüsünden altyazıyı okur, çevirir ve TV’de oyunun üstüne yazar. Oyun dosyalarına ve konsolun altyazı sistemine dokunmaz.</p>
+        <div class="hero__actions">
+          <a class="btn btn--solid" href="https://github.com/posmakinesi/turkbox/releases/download/v0.6.0/turkbox.apk">APK’yı indir</a>
+          <a class="link-quiet" href="#nasil-calisir">Nasıl çalıştığını gör</a>
+        </div>
+        <p class="hero__meta">
+          <span>v0.6.0</span>
+          <span>140,5 MB</span>
+          <span>Android 8+</span>
+          <span>Tizen</span>
+          <span>webOS</span>
+        </p>
+      </div>
+
+      <figure class="tv">
+        <div class="tv__frame">
+          <div class="tv__screen">
+            <div class="scene" aria-hidden="true">
+              <div class="scene__sky"></div>
+              <div class="scene__glow"></div>
+              <div class="scene__moon"></div>
+              <svg class="scene__ridge" viewBox="0 0 640 360" preserveAspectRatio="none" focusable="false">
+                <path d="M0 236 L58 208 L104 224 L152 186 L206 218 L262 196 L316 230 L372 200 L428 226 L486 198 L544 228 L592 210 L640 232 L640 360 L0 360 Z" fill="#0a181c"/>
+                <path d="M0 292 L54 266 L98 280 L146 246 L196 276 L244 254 L296 288 L344 262 L398 292 L448 268 L502 298 L552 276 L600 300 L640 284 L640 360 L0 360 Z" fill="#050c0e"/>
+              </svg>
+              <div class="scene__mist"></div>
+            </div>
+            <div class="tv__vignette" aria-hidden="true"></div>
+
+            <div class="tv__hud" aria-hidden="true">
+              <span class="tv__dot"></span>
+              <span>bağlı · 8765</span>
+            </div>
+            <span class="tv__size" aria-hidden="true">Aa</span>
+
+            <div class="tv__subs" aria-hidden="true">
+              <div class="capture" data-capture>
+                <span class="capture__tag" data-capture-tag>altyazı alanı</span>
+                <p class="tv__en" data-en>The town is quieter than it used to be.</p>
+                <span class="capture__scan"></span>
+              </div>
+              <p class="tv__tr" data-tr>Kasaba eskisinden daha sessiz.</p>
+            </div>
+
+            <div class="tv__scanlines" aria-hidden="true"></div>
+          </div>
+        </div>
+        <figcaption class="tv__cap">
+          <p>Temsili ekran: altyazı alanı okunuyor, Türkçesi altta beliriyor.</p>
+          <button class="tv__toggle" type="button" data-hero-toggle aria-pressed="false">
+            <span class="tv__toggle-icon" aria-hidden="true"></span>
+            <span data-toggle-label>Duraklat</span>
+          </button>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Statement -->
+  <section class="band" id="sorun">
+    <div class="wrap band__inner">
+      <h2>Oyun TV’de, altyazı telefonunda.</h2>
+      <div class="band__body">
+        <p>Remote Play’i telefonda açtığında aynı görüntü iki yerde olur: TV’de HDMI ile, telefonunda yayın olarak. Altyazı İngilizceyse gözün sürekli küçük ekrana iner ve sahne kaçar.</p>
+        <p>Türkbox telefonun gördüğünü okur, çevirir ve yerel ağdan TV’ye yollar. TV uygulaması oyunun üstünde şeffaf bir yazı katmanı açar.</p>
+        <p class="pull">Ne konsol modu, ne oyun dosyası, ne HDMI kablosu.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section" id="nasil-calisir" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="chapter">Akış</p>
+          <h2 id="how-title">Dört adım, iki cihaz.</h2>
+        </div>
+        <p>Telefon okur ve çevirir, TV yazar. Arada yalnızca ev ağı var; dışarıya açılan bir sunucu yok.</p>
+      </div>
+
+      <ol class="pipe" data-pipe>
+        <span class="pipe__rail" aria-hidden="true"></span>
+        <li class="pipe__step">
+          <div class="pipe__marker"><span class="pipe__dot" aria-hidden="true"></span><span class="pipe__num">01</span></div>
+          <h3>Alanı seç</h3>
+          <p>Altyazının çıktığı bölgeyi telefonda çerçevele, köşelerinden büyüt ve kilitle. Alan kilitliyken dokunuşlar Remote Play’e geçer.</p>
+        </li>
+        <li class="pipe__step">
+          <div class="pipe__marker"><span class="pipe__dot" aria-hidden="true"></span><span class="pipe__num">02</span></div>
+          <h3>Metni sabitle</h3>
+          <p>ML Kit yalnızca seçili alanı okur. Aynı satır art arda iki karede görünmeden TV’ye gitmez; yarım cümle ekrana düşmez.</p>
+        </li>
+        <li class="pipe__step">
+          <div class="pipe__marker"><span class="pipe__dot" aria-hidden="true"></span><span class="pipe__num">03</span></div>
+          <h3>Çevir</h3>
+          <p>Varsayılan yol çevrimdışı ML Kit. DeepL anahtarı eklersen metin oraya gider; sağlayıcı susarsa yerel model devralır.</p>
+        </li>
+        <li class="pipe__step">
+          <div class="pipe__marker"><span class="pipe__dot" aria-hidden="true"></span><span class="pipe__num">04</span></div>
+          <h3>TV’ye yaz</h3>
+          <p>Altı haneli kodla eşleşen WebSocket bağlantısı. Tizen uygulaması metni HDMI görüntüsünün üstüne çizer.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section section--line" id="ozellikler" aria-labelledby="feat-title">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="chapter">Telefonda</p>
+          <h2 id="feat-title">Uygulamanın içinde.</h2>
+        </div>
+        <p>Ekran yakalama, OCR, çeviri ve eşleştirme aynı oturumda ilerler. Ayarlar telefonda kalır, görünüm TV’ye anında geçer.</p>
+      </div>
+
+      <div class="feats">
+        <div class="feat">
+          <h3>Alan seçimi</h3>
+          <p>Altyazı bölgesini taşı, boyutlandır, sabitle. OCR yalnızca bu dikdörtgenin içini görür; ekranın geri kalanı hiç okunmaz.</p>
+        </div>
+        <div class="feat">
+          <h3>İki kare kuralı</h3>
+          <p>Tanınan satır art arda iki OCR sonucunda aynıysa yayına girer. Kesik metin ve yarım cümle elenir, aynı satır tekrar tekrar gönderilmez.</p>
+        </div>
+        <div class="feat">
+          <h3>Kamera ile okuma</h3>
+          <p>Remote Play ekran yakalamayı engellerse arka kamera TV’yi okur. Kareler cihazda işlenir, kaydedilmez ve ağa gönderilmez.</p>
+        </div>
+        <div class="feat">
+          <h3>Çeviri seçenekleri</h3>
+          <p>Çevrimdışı ML Kit her zaman hazır. DeepL API anahtarı isteğe bağlı; anahtar Android Keystore’da şifreli kalır, yalnızca altyazı metni sağlayıcıya gider.</p>
+        </div>
+        <div class="feat">
+          <h3>Yama eşleşmesi</h3>
+          <p>Türkçe yaması olan bir oyunda OCR metni yama anahtarıyla eşleşirse makine çevirisi yerine hazır Türkçe satır gösterilir. Eşleşmezse normal çeviriye döner.</p>
+        </div>
+        <div class="feat">
+          <h3>Kumandayla yazı boyutu</h3>
+          <p>TV kumandasının sol ve sağ tuşları altyazı boyutunu değiştirir, seçim TV’de saklanır. Eşleştirme paneli kapalıyken tuşlar doğrudan metne gider.</p>
+        </div>
+        <div class="feat">
+          <h3>Görünüm ayarları</h3>
+          <p>Yazı boyutu, metin rengi, arka plan rengi ve opaklık telefondan ayarlanır. Aktif oturumda TV’ye anında iletilir, yeni satırlarda da geçerli olur.</p>
+        </div>
+        <div class="feat">
+          <h3>Eşleştirmeli bağlantı</h3>
+          <p>Aynı Wi-Fi, <span class="code">8765</span> numaralı port ve her oturumda üretilen altı haneli kod. Eşleşmeyen bağlantı kapatılır, başarısız denemeler sınırlanır.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dubbing -->
+  <section class="section section--line" id="dublaj" aria-labelledby="dub-title">
+    <div class="wrap dub">
+      <div>
+        <p class="chapter">İsteğe bağlı</p>
+        <h2 id="dub-title">Repliği bir kez kaydet, sesi bir kez seç.</h2>
+        <p class="dub__lead">Kayıt modunda Türkbox, tanıdığı her yeni altyazıyı oyun kataloğuna yazar. Ses benzerliğine bakıp hangi satırların aynı konuşmacıya ait olabileceğini önerir. Öneriler seçili gelmez; atamayı sen onaylarsın.</p>
+        <ul class="dub__list">
+          <li>Ses cihazdan çıkmaz. 16&nbsp;kHz’lik örnekten ECAPA-TDNN imzası çıkarılır, benzerlik yerelde hesaplanır.</li>
+          <li>Sesler ElevenLabs ile üretilir. Anahtar yoksa cihazın Türkçe TTS motoru WAV üretir ve TV’ye yollar.</li>
+          <li>Bütün satırların sesi hazır olduğunda “Dublajlı oyna” açılır. Eşleşmeyen satır yalnızca altyazı olarak kalır.</li>
+        </ul>
+        <p class="dub__note">Ses benzerliği karakter kimliği değil, yaklaşık bir eşleştirme. Hazır bir Türkçe dublaj paketi yok; katalog senin kaydettiklerinden oluşur.</p>
+      </div>
+
+      <div class="cat" role="group" aria-label="Örnek oyun kataloğu">
+        <div class="cat__head">
+          <span class="cat__title">The Evil Within · katalog</span>
+          <span class="cat__status">3 replik hazır</span>
+        </div>
+        <ul class="cat__list">
+          <li class="line">
+            <p class="line__tr">Buraya geri dönmemeliydik.</p>
+            <p class="line__en">We should not have come back here.</p>
+            <div class="line__row">
+              <span class="wave" aria-hidden="true">
+                <i style="--h:5;--d:0"></i><i style="--h:11;--d:60"></i><i style="--h:7;--d:120"></i><i style="--h:14;--d:30"></i><i style="--h:9;--d:90"></i><i style="--h:6;--d:150"></i><i style="--h:12;--d:45"></i><i style="--h:4;--d:110"></i><i style="--h:10;--d:75"></i><i style="--h:7;--d:20"></i><i style="--h:5;--d:140"></i><i style="--h:8;--d:55"></i>
+              </span>
+              <span class="voice voice--on">Kadın 1</span>
+            </div>
+          </li>
+          <li class="line">
+            <p class="line__tr">Gittiğimde kapı açıktı.</p>
+            <p class="line__en">The door was open when I left.</p>
+            <div class="line__row">
+              <span class="wave" aria-hidden="true">
+                <i style="--h:8;--d:20"></i><i style="--h:5;--d:80"></i><i style="--h:13;--d:35"></i><i style="--h:9;--d:115"></i><i style="--h:6;--d:50"></i><i style="--h:11;--d:95"></i><i style="--h:7;--d:10"></i><i style="--h:14;--d:130"></i><i style="--h:5;--d:65"></i><i style="--h:9;--d:25"></i><i style="--h:6;--d:145"></i><i style="--h:4;--d:85"></i>
+              </span>
+              <span class="voice">Erkek 2</span>
+            </div>
+          </li>
+          <li class="line">
+            <p class="line__tr">Sesini alçalt.</p>
+            <p class="line__en">Keep your voice down.</p>
+            <div class="line__row">
+              <span class="wave" aria-hidden="true">
+                <i style="--h:4;--d:60"></i><i style="--h:10;--d:15"></i><i style="--h:7;--d:100"></i><i style="--h:12;--d:40"></i><i style="--h:6;--d:125"></i><i style="--h:9;--d:5"></i><i style="--h:13;--d:70"></i><i style="--h:5;--d:110"></i><i style="--h:8;--d:30"></i><i style="--h:11;--d:90"></i><i style="--h:5;--d:50"></i><i style="--h:7;--d:135"></i>
+              </span>
+              <span class="voice voice--on">Kadın 2</span>
+            </div>
+          </li>
+        </ul>
+        <p class="cat__foot">Örnek arayüz. Ses dosyaları bu sayfada yok; oynatım telefonda ve TV’de yapılır.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compatibility -->
+  <section class="section section--line" id="nerede" aria-labelledby="where-title">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="chapter">Donanım</p>
+          <h2 id="where-title">Nerede çalışır?</h2>
+        </div>
+        <p>Aynı ev ağındaki bir telefon ve bir TV. Bulut sunucu, hesap ya da abonelik yok.</p>
+      </div>
+
+      <table class="compat">
+        <caption>Katmanlar ve gereksinimler</caption>
+        <thead>
+          <tr><th scope="col">Katman</th><th scope="col">Ne yapar</th><th scope="col">Gereken</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Katman">Android telefon</td>
+            <td data-label="Ne yapar">Ekran yakalama, OCR, çeviri ve eşleştirme sunucusu</td>
+            <td data-label="Gereken">Android 8 ve üzeri, arm64-v8a; ekran yakalama ve üstte gösterme izinleri</td>
+          </tr>
+          <tr>
+            <td data-label="Katman">Samsung Tizen 5.0+</td>
+            <td data-label="Ne yapar">HDMI görüntüsünün üstünde şeffaf altyazı katmanı</td>
+            <td data-label="Gereken">TV geliştirici modu, imzalı WGT, <span class="code">26101</span> üzerinden SDB onayı</td>
+          </tr>
+          <tr>
+            <td data-label="Katman">webOS tarayıcı</td>
+            <td data-label="Ne yapar">HDMI 1–4 seçimi, canlı altyazı ve dublaj çalma</td>
+            <td data-label="Gereken">Telefondan yerel HTTP: <span class="code">8766</span></td>
+          </tr>
+          <tr>
+            <td data-label="Katman">Yerel ağ</td>
+            <td data-label="Ne yapar">Altı haneli kodla eşleşen altyazı akışı</td>
+            <td data-label="Gereken">Aynı Wi-Fi; WebSocket portu <span class="code">8765</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Release -->
+  <section class="section section--line" id="indir" aria-labelledby="dl-title">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="chapter">Dağıtım</p>
+          <h2 id="dl-title">Telefona kurulmaya hazır.</h2>
+        </div>
+        <p>Play Store’da değil; GitHub sürümünden indirilir. TV uygulaması ayrı bir dosya değil, APK’nın içinde imzalı WGT olarak gelir.</p>
+      </div>
+
+      <div class="release">
+        <div class="release__top">
+          <div class="release__lead">
+            <p class="release__kicker">Türkbox · Android APK</p>
+            <p class="release__version">v0.6.0</p>
+            <div class="release__actions">
+              <a class="btn btn--solid" href="https://github.com/posmakinesi/turkbox/releases/download/v0.6.0/turkbox.apk">APK’yı indir</a>
+              <span class="release__size">140,5 MB</span>
+            </div>
+            <p class="release__links">
+              <a href="https://github.com/posmakinesi/turkbox/releases/tag/v0.6.0" target="_blank" rel="noopener">Sürüm sayfası</a>
+              <span aria-hidden="true">/</span>
+              <a href="https://github.com/posmakinesi/turkbox" target="_blank" rel="noopener">GitHub deposu</a>
+            </p>
+            <p class="release__hint">Play Store dışı kurulum. Android’de bilinmeyen kaynaklara izin vermen gerekir.</p>
+          </div>
+
+          <dl class="release__spec">
+            <div>
+              <dt>Dosya</dt>
+              <dd>turkbox.apk</dd>
+            </div>
+            <div>
+              <dt>Yayın</dt>
+              <dd>19 Kasım 2026</dd>
+            </div>
+            <div>
+              <dt>Son dosya</dt>
+              <dd>22 Kasım 2026</dd>
+            </div>
+            <div>
+              <dt>Platform</dt>
+              <dd>Android 8 ve üzeri <span>· arm64-v8a</span></dd>
+            </div>
+            <div>
+              <dt>Boyut</dt>
+              <dd>140,5 MB <span>· 147.324.475 bayt</span></dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="release__verify">
+          <span class="release__verify-label">SHA-256</span>
+          <code id="apk-hash" translate="no">6ef6a6aba3ea130bd681a9a4a30325f46f83a7ab5c13452f28e73dc45cadfcd7</code>
+          <button class="hash-copy" type="button" data-copy-hash>Kopyala</button>
+        </div>
+      </div>
+
+      <div class="release__notes">
+        <div>
+          <h3>Dağıtılan</h3>
+          <ul>
+            <li>Android APK, yalnızca arm64-v8a cihazlar için</li>
+            <li>APK içinde imzalı Tizen WGT ve webOS alıcısı</li>
+            <li>OCR, çeviri ve 83 MB’lık konuşmacı modeli</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Dağıtılmayan</h3>
+          <ul>
+            <li>Ayrı WGT indirmesi ve uygulama kaynak kodu</li>
+            <li>Hazır Türkçe dublaj ses paketi</li>
+            <li>DeepL veya ElevenLabs API anahtarı</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="release__warn" role="note">
+        <p class="release__warn-label">İmzalı WGT uyarısı</p>
+        <p>TV uygulaması APK’nın içinde imzalı WGT olarak gelir; ayrı indirilmez. TV’ye kurmak için Tizen geliştirici modu ve SDB onayı gerekir. TV’de eski bir Türkbox kuruluysa APK’yı güncelledikten sonra TV uygulamasını da yeniden yükle; sürümler eşleşmezse dublaj ve görünüm mesajları çalışmayabilir. İmzasız bir web build’i TV’ye yüklemek için yeterli değildir.</p>
+      </div>
+
+      <p class="sr-only" aria-live="polite" data-copy-status></p>
+    </div>
+  </section>
+
+  <!-- Setup -->
+  <section class="section section--line" id="kurulum" aria-labelledby="setup-title">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="chapter">Kurulum</p>
+          <h2 id="setup-title">Üç adımda hazır.</h2>
+        </div>
+        <p>Telefonu ve TV’yi aynı ağa bağla. Kurulumun geri kalanı iki cihaz arasında; arada bir hesap açman gerekmiyor.</p>
+      </div>
+
+      <ol class="pipe pipe--3" data-pipe>
+        <span class="pipe__rail" aria-hidden="true"></span>
+        <li class="pipe__step">
+          <div class="pipe__marker"><span class="pipe__dot" aria-hidden="true"></span><span class="pipe__num">01</span></div>
+          <h3>Telefonu hazırla</h3>
+          <p>APK’yı indir ve kur; ekran yakalama ile üstte gösterme izinlerini ver. Anlık çeviriyi başlat.</p>
+        </li>
+        <li class="pipe__step">
+          <div class="pipe__marker"><span class="pipe__dot" aria-hidden="true"></span><span class="pipe__num">02</span></div>
+          <h3>TV’yi eşleştir</h3>
+          <p>TV’de geliştirici modunu aç, telefonun IP adresini gir ve imzalı paketi yükle. Uygulamada telefon IP’si ile altı haneli kodu yaz.</p>
+        </li>
+        <li class="pipe__step">
+          <div class="pipe__marker"><span class="pipe__dot" aria-hidden="true"></span><span class="pipe__num">03</span></div>
+          <h3>Alanı hizala</h3>
+          <p>TV kumandasıyla Xbox HDMI girişini seç, Türkbox’ı açık bırak. Telefonda Remote Play’i aç, altyazı bölgesini çerçevele.</p>
+        </li>
+      </ol>
+
+      <p class="steps-note">APK’yı sürüm bloğundan indir; imzalı WGT ayrı gelmez, APK’nın içindedir. <span class="code">26101</span> paket kurulumu, <span class="code">8765</span> canlı altyazı içindir; birinin çalışması diğerini garanti etmez.</p>
+    </div>
+  </section>
+
+  <!-- Limits -->
+  <section class="section section--tight section--line" id="sinirlar" aria-labelledby="limits-title">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="chapter">Sınırlar</p>
+          <h2 id="limits-title">Neyi yapmıyor.</h2>
+        </div>
+        <p>Bir yardımcı uygulamanın nerede durduğunu bilmek, onu doğru yerde kullanmanın parçası.</p>
+      </div>
+
+      <ul class="limits">
+        <li><b>Oyunu değiştirmez.</b> Dosyalara, kayıtlara ve konsolun altyazı sistemine erişmez. Yama eşleşmesinde yalnızca metni karşılaştırır.</li>
+        <li><b>HDMI görüntüsünü yakalamaz.</b> Telefon Remote Play görüntüsünü okur; Tizen uygulaması HDMI’ı arkasında tutup üstüne çizer. Girişi uygulama seçemez, kumandayla sen seçersin.</li>
+        <li><b>Kamera modunda konum yaklaşıktır.</b> Ekran yakalama engellenirse kamera OCR devreye girer; çeviri sabit bir alt bölgeye yerleşir, altyazının tam üstüne oturmaz.</li>
+        <li><b>Bazı kısımlar deneysel.</b> Tizen HDMI katmanı ve otomatik dublaj akışının bir bölümü hedef TV’de doğrulanmayı bekliyor. Yama eşleşmesi deneysel ve DLC’leri kapsamıyor.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section--line" id="sss" aria-labelledby="faq-title">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="chapter">SSS</p>
+          <h2 id="faq-title">Sorular.</h2>
+        </div>
+        <p>Kısa cevaplar. Daha fazlası uygulamanın kendi kullanım rehberinde ve “Uygulama hakkında” ekranında.</p>
+      </div>
+
+      <div class="faq">
+        <details class="faq__item">
+          <summary>Oyunun dosyalarını değiştiriyor mu?<span class="faq__sign" aria-hidden="true"></span></summary>
+          <p class="faq__a">Hayır. Yalnızca ekranda gördüğünü okur. Konsolun altyazı sistemine, oyun dosyalarına ve HDMI zincirine erişmez. Yama eşleşmesi kullanıldığında bile sadece metin karşılaştırması yapılır.</p>
+        </details>
+        <details class="faq__item">
+          <summary>HDMI görüntüsünü yakalıyor mu?<span class="faq__sign" aria-hidden="true"></span></summary>
+          <p class="faq__a">Hayır. Telefon Remote Play görüntüsünü okur. TV tarafındaki Tizen uygulaması HDMI kaynağını arkasında tutup üstüne şeffaf bir metin katmanı çizer; webOS tarayıcı sürümünde HDMI girişini sayfa seçer.</p>
+        </details>
+        <details class="faq__item">
+          <summary>Ekran yakalama engellenirse ne oluyor?<span class="faq__sign" aria-hidden="true"></span></summary>
+          <p class="faq__a">“Kamerayla altyazı oku” bölümü arka kamerayla TV’yi okur. Kareler cihazda işlenir, kaydedilmez ve ağa gönderilmez. Çeviri ve TV aktarımı aynı akışta devam eder; yazı sabit bir alt bölgeye yerleşir.</p>
+        </details>
+        <details class="faq__item">
+          <summary>İnternet gerekiyor mu?<span class="faq__sign" aria-hidden="true"></span></summary>
+          <p class="faq__a">OCR, çeviri ve dublaj büyük ölçüde cihazda çalışır; aynı Wi-Fi yeterli. DeepL veya ElevenLabs kullanırsan yalnızca seçtiğin metin o sağlayıcıya gider. Çevrimdışı çeviri modeli ilk kullanımda indirme isteyebilir.</p>
+        </details>
+        <details class="faq__item">
+          <summary>Hangi diller destekleniyor?<span class="faq__sign" aria-hidden="true"></span></summary>
+          <p class="faq__a">İngilizce altyazıyı Türkçeye çevirir. Telefon arayüzü, TV katmanı ve kullanım rehberi Türkçedir.</p>
+        </details>
+        <details class="faq__item">
+          <summary>Hazır bir Türkçe dublaj paketi var mı?<span class="faq__sign" aria-hidden="true"></span></summary>
+          <p class="faq__a">Yok. Sesler senin kayıt modunda topladığın repliklerden üretilir. Konuşmacı eşleştirmesi ses benzerliğine dayanır; karakter adı veya cinsiyet çıkarmaz, kesin sonuç vaat etmez.</p>
+        </details>
+        <details class="faq__item">
+          <summary>Tizen ve webOS aynı şey mi?<span class="faq__sign" aria-hidden="true"></span></summary>
+          <p class="faq__a">Aynı akışı dinleyen iki ayrı alıcı. Tizen tarafı Samsung TV uygulamasıdır ve HDMI katmanını TV Window API ile kurar. webOS tarafı TV tarayıcısında açılan yerel bir sayfadır; HDMI 1–4 seçimini kendisi yapar.</p>
+        </details>
+        <details class="faq__item">
+          <summary>Neden bazı özellikler “deneysel” deniyor?<span class="faq__sign" aria-hidden="true"></span></summary>
+          <p class="faq__a">HDMI katmanı, kamera OCR hizalaması ve dublajın bir bölümü hedef telefon ve TV’de hâlâ doğrulanmayı bekliyor. Türkbox bunları çalışıyormuş gibi göstermek yerine sınırını yazıyor. Derleme ve birim testleri geçse bile fiziksel cihaz testi ayrı bir adım.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="site-foot__top">
+      <p class="site-foot__big">Altyazı zaten Türkçe.</p>
+      <a class="site-foot__up" href="#top">Başa dön</a>
+    </div>
+    <div class="site-foot__bottom">
+      <span class="brand">
+        <svg class="brand__mark" viewBox="0 0 26 22" aria-hidden="true" focusable="false">
+          <rect x="1" y="1.5" width="24" height="16" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"/>
+          <path class="mark-line" d="M6 8.5h9M6 12.5h6" fill="none" stroke-width="1.7" stroke-linecap="round"/>
+          <path d="M9.5 20.5h7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".35"/>
+        </svg>
+        <span class="brand__word">türkbox</span>
+      </span>
+      <p>Kişisel bir altyazı köprüsü. Tek HTML dosyası, harici kütüphane yok.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  root.classList.remove('no-js');
+  root.classList.add('js');
+
+  /* Sticky header state */
+  var head = document.querySelector('.site-head');
+  function onScroll() {
+    head.classList.toggle('is-stuck', window.scrollY > 8);
+  }
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* Mobile menu */
+  var menuBtn = document.querySelector('.menu-btn');
+  var links = document.getElementById('nav-links');
+  if (menuBtn && links) {
+    var setMenu = function (open) {
+      menuBtn.setAttribute('aria-expanded', String(open));
+      menuBtn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+      links.classList.toggle('is-open', open);
+    };
+    menuBtn.addEventListener('click', function () {
+      setMenu(menuBtn.getAttribute('aria-expanded') !== 'true');
+    });
+    links.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setMenu(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menuBtn.getAttribute('aria-expanded') === 'true') {
+        setMenu(false);
+        menuBtn.focus();
+      }
+    });
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 860) setMenu(false);
+    });
+  }
+
+  /* Pipeline reveal */
+  var pipes = document.querySelectorAll('[data-pipe]');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    pipes.forEach(function (el) { io.observe(el); });
+  } else {
+    pipes.forEach(function (el) { el.classList.add('is-in'); });
+  }
+
+  /* Copy SHA-256 */
+  var copyBtn = document.querySelector('[data-copy-hash]');
+  var hashEl = document.getElementById('apk-hash');
+  var copyStatus = document.querySelector('[data-copy-status]');
+  if (copyBtn && hashEl) {
+    var copyLabelTimer;
+    var announce = function (message) {
+      if (copyStatus) copyStatus.textContent = message;
+    };
+    var copied = function () {
+      copyBtn.textContent = 'Kopyalandı';
+      announce('SHA-256 kopyalandı.');
+      window.clearTimeout(copyLabelTimer);
+      copyLabelTimer = window.setTimeout(function () { copyBtn.textContent = 'Kopyala'; }, 2200);
+    };
+    var copyFailed = function () {
+      announce('Kopyalanamadı. Değeri seçip elle kopyalayabilirsin.');
+    };
+    copyBtn.addEventListener('click', function () {
+      var value = hashEl.textContent.trim();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(copied, copyFailed);
+        return;
+      }
+      var field = document.createElement('textarea');
+      field.value = value;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.appendChild(field);
+      field.select();
+      try {
+        document.execCommand('copy') ? copied() : copyFailed();
+      } catch (err) {
+        copyFailed();
+      }
+      document.body.removeChild(field);
+    });
+  }
+
+  /* Hero loop: capture, translate, hold */
+  var pairs = [
+    { en: 'The town is quieter than it used to be.', tr: 'Kasaba eskisinden daha sessiz.' },
+    { en: 'You should not have opened that door.', tr: 'O kapıyı açmamalıydın.' },
+    { en: 'We have until morning. Then the road closes.', tr: 'Sabaha kadar vaktimiz var. Sonra yol kapanır.' }
+  ];
+  var enEl = document.querySelector('[data-en]');
+  var trEl = document.querySelector('[data-tr]');
+  var capEl = document.querySelector('[data-capture]');
+  var tagEl = document.querySelector('[data-capture-tag]');
+  var toggle = document.querySelector('[data-hero-toggle]');
+  var toggleLabel = document.querySelector('[data-toggle-label]');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var timers = [];
+  var index = 0;
+  var running = false;
+
+  function clearTimers() {
+    timers.forEach(window.clearTimeout);
+    timers = [];
+  }
+  function at(ms, fn) {
+    timers.push(window.setTimeout(fn, ms));
+  }
+  function reset(i) {
+    enEl.textContent = pairs[i].en;
+    trEl.textContent = pairs[i].tr;
+    capEl.classList.remove('is-locked');
+    trEl.classList.remove('is-shown');
+    enEl.classList.remove('is-out');
+    tagEl.textContent = 'altyazı alanı';
+  }
+  function cycle() {
+    reset(index);
+    at(800, function () {
+      capEl.classList.add('is-locked');
+      tagEl.textContent = 'okundu';
+    });
+    at(1350, function () {
+      trEl.classList.add('is-shown');
+    });
+    at(5400, function () {
+      trEl.classList.remove('is-shown');
+      enEl.classList.add('is-out');
+    });
+    at(6100, function () {
+      index = (index + 1) % pairs.length;
+      if (running) cycle();
+    });
+  }
+  function start() {
+    if (!enEl || !trEl) return;
+    running = true;
+    clearTimers();
+    cycle();
+  }
+  function stop() {
+    running = false;
+    clearTimers();
+  }
+
+  if (enEl && trEl) {
+    if (reduce.matches) {
+      reset(0);
+      capEl.classList.add('is-locked');
+      tagEl.textContent = 'okundu';
+      trEl.classList.add('is-shown');
+    } else {
+      start();
+    }
+
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        var paused = toggle.getAttribute('aria-pressed') === 'true';
+        if (paused) {
+          toggle.setAttribute('aria-pressed', 'false');
+          toggle.classList.remove('is-paused');
+          toggleLabel.textContent = 'Duraklat';
+          start();
+        } else {
+          toggle.setAttribute('aria-pressed', 'true');
+          toggle.classList.add('is-paused');
+          toggleLabel.textContent = 'Sürdür';
+          stop();
+        }
+      });
+    }
+
+    var onMotionChange = function (e) {
+      if (e.matches) {
+        stop();
+        reset(0);
+        capEl.classList.add('is-locked');
+        trEl.classList.add('is-shown');
+        if (toggle) {
+          toggle.setAttribute('aria-pressed', 'true');
+          toggle.classList.add('is-paused');
+        }
+      }
+    };
+    if (typeof reduce.addEventListener === 'function') {
+      reduce.addEventListener('change', onMotionChange);
+    }
+  }
+})();
+</script>
+</body>
+</html>
