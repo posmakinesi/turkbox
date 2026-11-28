@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#080B10">
+<title>Türkbox — konsol altyazılarını oynarken Türkçeye çevir</title>
+<meta name="description" content="Türkbox, telefonundaki PS veya Xbox Remote Play altyazılarını okur, Türkçeye çevirir ve aynı Wi-Fi'daki Tizen veya webOS TV'ye gönderir. Android APK'yı GitHub'dan indir.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Türkbox — konsol altyazıları, oynarken Türkçe">
+<meta property="og:description" content="Ekrandaki İngilizce altyazıyı okur, Türkçeye çevirir, TV'ye gönderir. Oyunun dilini değiştirmen gerekmez.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23080B10'/%3E%3Crect x='7' y='12' width='18' height='3' rx='1.5' fill='%23FFC24A'/%3E%3Crect x='7' y='18' width='12' height='3' rx='1.5' fill='%23E9EFF4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">İçeriğe geç</a>
+
+<header class="site-head">
+  <a class="brand" href="#top" translate="no" aria-label="Türkbox ana sayfa">
+    <svg class="brand-mark" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false">
+      <rect x="2" y="7" width="28" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+      <rect x="7" y="12" width="18" height="2.6" rx="1.3" fill="#FFC24A"/>
+      <rect x="7" y="17.5" width="11" height="2.6" rx="1.3" fill="currentColor"/>
+    </svg>
+    <span class="brand-name">Türkbox</span>
+  </a>
+  <nav class="site-nav" aria-label="Ana menü">
+    <a href="#nasil">Nasıl çalışır</a>
+    <a href="#ozellikler">Özellikler</a>
+    <a href="#kurulum">Kurulum</a>
+    <a href="#sss">SSS</a>
+  </nav>
+  <a class="btn btn-primary btn-head" href="https://github.com/posmakinesi/turkbox/releases/latest/download/turkbox.apk">
+    APK indir
+  </a>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <h1>Konsol altyazıları,<br>oynarken Türkçe.</h1>
+    <div class="hero-body">
+    <div class="hero-copy">
+      <p class="hero-lead">
+        Türkbox telefonundaki PS veya Xbox Remote Play görüntüsündeki İngilizce altyazıyı okur,
+        Türkçeye çevirir ve aynı Wi-Fi'daki TV'ye gönderir. Oyunun dilini değiştirmen gerekmez.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://github.com/posmakinesi/turkbox/releases/latest/download/turkbox.apk">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+            <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          APK'yı indir
+        </a>
+        <a class="btn btn-quiet" href="#nasil">Nasıl çalışır</a>
+      </div>
+      <p class="hero-meta">Android 8 ve üzeri &middot; yaklaşık 150&nbsp;MB &middot; GitHub'dan, ücretsiz</p>
+    </div>
+
+    <figure class="tv">
+      <div class="tv-frame">
+        <div class="tv-screen" role="img"
+             aria-label="TV ekranında bir oyun sahnesi ve altında Türkçe altyazı: “Fazla vaktimiz yok.” Üstünde İngilizce kaynak satır: “We don't have much time.”">
+          <div class="scene" aria-hidden="true">
+            <span class="scene-glow"></span>
+            <span class="scene-haze"></span>
+            <span class="scene-horizon"></span>
+          </div>
+          <p class="tv-badge" aria-hidden="true"><span class="dot"></span>TV alıcısı bağlı</p>
+          <div class="caption">
+            <p class="caption-source" lang="en">“We don't have much time.”</p>
+            <p class="caption-tr">“Fazla vaktimiz yok.”</p>
+          </div>
+        </div>
+      </div>
+      <figcaption>Örnek görüntü: altyazı katmanı TV'de, oyunun üzerinde.</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section class="band" aria-label="Kısa özet">
+    <p><strong>Telefon okur, TV gösterir.</strong> Çeviri cihazında yapılır; konsolun görüntüsüne, oyun dosyalarına veya hesabına erişilmez.</p>
+  </section>
+
+  <section class="section" id="nasil">
+    <div class="section-head">
+      <h2>Üç adımda çalışır</h2>
+      <p>İlk kurulumdan sonra her oyunda yalnızca yakalamayı başlatman yeterli.</p>
+    </div>
+    <ol class="steps">
+      <li>
+        <h3>Telefonu TV'ye bağla</h3>
+        <p>TV'de alıcıyı aç, <em>Telefonu bul</em>'a bas. Telefonda çıkan onay bildirimini kabul et; kod yazman gerekmez.</p>
+      </li>
+      <li>
+        <h3>Yakalamayı başlat</h3>
+        <p>Uygulamada <em>Çeviriyi başlat</em>'a dokun, ekran yakalama iznini ver ve altyazı alanını seç.</p>
+      </li>
+      <li>
+        <h3>Oynamaya devam et</h3>
+        <p>Remote Play'i aç. Altyazı okundukça Türkçesi TV'de belirir; telefonu kilitlemek için bildirimden alanı kilitle.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section" id="ozellikler">
+    <div class="section-head">
+      <h2>Oyunun dilini değiştirmeden</h2>
+      <p>Altyazıyı ekrandan okur; çeviri, dublaj ve eşleştirme ayarları sende kalır.</p>
+    </div>
+    <ul class="features">
+      <li>
+        <h3>Ekrandan okur</h3>
+        <p>Seçtiğin altyazı bandını OCR ile okur. Siyah ekran, film şeridi veya oyun dosyası gerekmez.</p>
+      </li>
+      <li>
+        <h3>Kamerayla okuma</h3>
+        <p>PS Remote Play ekran yakalamayı engelliyorsa telefon kamerası TV'yi okur. Kareler kaydedilmez.</p>
+      </li>
+      <li>
+        <h3>Çevrimdışı çeviri</h3>
+        <p>Varsayılan çeviri cihazda çalışır. İstersen DeepL anahtarını ekleyip daha akıcı çeviri alırsın.</p>
+      </li>
+      <li>
+        <h3>Türkçe dublaj</h3>
+        <p>ElevenLabs sesleriyle önceden dublaj hazırla ya da anahtarsız, telefonun ücretsiz Türkçe sesini kullan.</p>
+      </li>
+      <li>
+        <h3>Konuşmacı eşleştirme</h3>
+        <p>Aynı karakterin repliklerini ses benzerliğinden yaklaşık gruplar; seçimi her zaman sen onaylarsın.</p>
+      </li>
+      <li>
+        <h3>Oyun sözlüğü ve tekrar hafızası</h3>
+        <p>Karakter ve silah adlarını sabitlersin. Aynı satır tekrar geldiğinde önceki çeviri kullanılır.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="kurulum">
+    <div class="section-head">
+      <h2>Kurulum</h2>
+      <p>İki parça var: Android uygulaması ve TV alıcısı. İkisi de aynı Wi-Fi'da çalışır.</p>
+    </div>
+    <div class="install">
+      <article class="install-block">
+        <h3>Telefon</h3>
+        <ol class="ticks">
+          <li>APK'yı indir ve kur. Android bilinmeyen kaynak izni isterse Türkbox için aç.</li>
+          <li>Uygulamayı aç, ekran yakalama ve bildirim izinlerini ver.</li>
+          <li>Güncellemeleri uygulama kendisi denetler; yeni sürüm çıkınca güncellemeden devam edemezsin.</li>
+        </ol>
+      </article>
+      <article class="install-block">
+        <h3>TV</h3>
+        <ol class="ticks">
+          <li><strong>Samsung Tizen:</strong> imzalı <code>.wgt</code> paketini TV'ye yükle, alıcıyı aç.</li>
+          <li><strong>webOS:</strong> TV tarayıcısında telefonun gösterdiği yerel adresi aç.</li>
+          <li>Alıcıyı açık bırak; oyun görüntüsünün üzerinde altyazı katmanı görünür.</li>
+        </ol>
+      </article>
+    </div>
+    <p class="install-note">
+      Gereksinimler: Android 8.0 veya üzeri telefon, aynı ağa bağlı Tizen 5.0 / webOS TV ve
+      Remote Play hesabı. Konsolun HDMI çıkışı doğrudan okunmaz.
+    </p>
+  </section>
+
+  <section class="download" id="indir">
+    <div>
+      <h2>APK'yı indir</h2>
+      <p class="download-meta">Android 8+ &middot; yaklaşık 150&nbsp;MB &middot; Türkçe arayüz</p>
+    </div>
+    <div class="download-actions">
+      <a class="btn btn-primary btn-large" href="https://github.com/posmakinesi/turkbox/releases/latest/download/turkbox.apk">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+          <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Türkbox APK
+      </a>
+      <a class="text-link" href="https://github.com/posmakinesi/turkbox/releases">Sürüm notları ve eski sürümler</a>
+    </div>
+  </section>
+
+  <section class="section" id="sss">
+    <div class="section-head">
+      <h2>Sık sorulan sorular</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Oyunun kendi altyazısı olmak zorunda mı?</summary>
+        <p>Evet. Türkbox, Remote Play görüntüsünde görünen yazıyı okur. Altyazı kapalıysa veya ekranda yazı yoksa çevirecek bir şey de yoktur.</p>
+      </details>
+      <details>
+        <summary>İnternet olmadan çalışır mı?</summary>
+        <p>Çevrimdışı çeviri modeli indirildikten sonra çeviri cihazda yapılır. DeepL ve ElevenLabs isteğe bağlıdır ve internet ister. Güncelleme denetimi de internet gerektirir; bağlantı yoksa uygulama açılmaya devam eder.</p>
+      </details>
+      <details>
+        <summary>TV'de ayrı uygulama şart mı?</summary>
+        <p>Tizen TV'de imzalı alıcı paketi, webOS TV'de tarayıcıda açılan yerel sayfa gerekir. Telefon ve TV aynı Wi-Fi ağında olmalı; misafir ağı cihazları birbirinden ayırabilir.</p>
+      </details>
+      <details>
+        <summary>PS Remote Play ekran yakalamayı engelliyor, ne yapabilirim?</summary>
+        <p>Kamerayla altyazı okuma modunu kullan. Telefonun arka kamerası TV'yi okur, ekran yakalama kullanılmaz. Odak, parlama ve kadraj doğruluğu etkiler.</p>
+      </details>
+      <details>
+        <summary>Güncellemeleri nasıl alırım?</summary>
+        <p>Uygulama açılışta GitHub'daki son sürümü denetler. Yeni sürüm varsa bildirim ve güncelleme ekranı çıkar; APK'yı uygulama indirir, kurulumu Android'in kendi ekranında onaylarsın.</p>
+      </details>
+      <details>
+        <summary>Verilerim bir yere gönderiliyor mu?</summary>
+        <p>OCR ve varsayılan çeviri cihazda kalır. Yalnızca kendi anahtarını girersen altyazı metni DeepL'e, dublaj metni ElevenLabs'e gönderilir. Hesap, tanılama veya reklam verisi toplanmaz.</p>
+      </details>
+      <details>
+        <summary>Xbox, PlayStation veya Samsung ile bağlantılı mı?</summary>
+        <p>Hayır. Türkbox bağımsız bir yardımcı uygulamadır; Microsoft, Sony, Samsung veya LG ile resmî bir bağı yoktur.</p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="foot-brand">
+    <span class="brand-name" translate="no">Türkbox</span>
+    <p>Konsol altyazıları için Türkçe katman.</p>
+  </div>
+  <nav aria-label="Alt bağlantılar">
+    <a href="https://github.com/posmakinesi/turkbox">GitHub deposu</a>
+    <a href="https://github.com/posmakinesi/turkbox/releases">Sürümler</a>
+    <a href="#top">Başa dön</a>
+  </nav>
+  <p class="foot-note">APK doğrudan GitHub sürümlerinden indirilir. Site çerez ve izleme kodu kullanmaz.</p>
+</footer>
+</body>
+</html>
